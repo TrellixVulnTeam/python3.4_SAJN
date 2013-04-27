@@ -1359,8 +1359,8 @@ endif
 	  fi; \
 	done
 
-	dh_makeshlibs -p$(p_lib) -V '$(p_lib)'
-	dh_makeshlibs -p$(p_ldbg) -V '$(p_ldbg)'
+	dh_makeshlibs -p$(p_lib) -V '$(p_lib)' -- -c4
+	dh_makeshlibs -p$(p_ldbg) -V '$(p_ldbg)' -- -c4
 # don't include the following symbols, found in extensions
 # which either can be built as builtin or extension.
 	sed -ri \

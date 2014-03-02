@@ -1,0 +1,5 @@
+# DP: hg updates from the trunk (until 2014-01-05, 88229:e5fa13aae1cc).
+## DP: hg updates of the 3.4 release branch (until 2014-xx-xx, ).
+
+# hg diff -r v3.4.0b2 | filterdiff --exclude=.hgignore --exclude=.hgeol --exclude=.hgtags --remove-timestamps
+

@@ -997,9 +997,6 @@ endif
 		$(d_base)/usr/share/doc/$(PVER)/README.Debian
 	install -m 644 -p debian/README.$(p_idle) \
 		$(d_idle)/usr/share/doc/$(p_idle)/README.Debian
-ifeq ($(with_tk),yes)
-	cp -p debian/README.Tk $(d_tk)/usr/share/doc/$(p_tk)/
-endif
 
 	: # library files into $(p_lbase)
 	dh_installdirs -p$(p_lbase) \

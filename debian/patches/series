@@ -1,4 +1,4 @@
-// hg-updates.diff
+#hg-updates.diff
 deb-setup.diff
 deb-locations.diff
 site-locations.diff
@@ -20,21 +20,11 @@ makesetup-bashism.diff
 hurd-disable-nonworking-constants.diff
 enable-fpectl.diff
 statvfs-f_flag-constants.diff
-#if defined (BROKEN_UTIMES)
-disable-utimes.diff
-#endif
-#if defined (Ubuntu)
+
+# Ubuntu specific
 langpack-gettext.diff
-#endif
-#if defined (arch_os_hurd)
-no-large-file-support.diff
-#endif
+
 hurd-path_max.diff
-#ifdef OLD_SPHINX
-doc-build.diff
-revert-r83234.diff
-revert-r83274.diff
-#endif
 #link-system-expat.diff
 disable-sem-check.diff
 lib-argparse.diff

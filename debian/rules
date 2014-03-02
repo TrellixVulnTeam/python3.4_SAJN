@@ -8,6 +8,12 @@ export SHELL = /bin/bash
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+DPKG_EXPORT_BUILDFLAGS = 1
+include /usr/share/dpkg/buildflags.mk
+
+# Preserve these generated files when cleaning so they're included in the source package
+PRESERVE_FILES := "debian/control:debian/source.lintian-overrides"
+
 vafilt		= $(subst $(2)=,,$(filter $(2)=%,$(1)))
 DPKG_VARS	:= $(shell dpkg-architecture)
 DEB_BUILD_ARCH		?= $(call vafilt,$(DPKG_VARS),DEB_BUILD_ARCH)
@@ -621,8 +627,22 @@ endif
 	  mv debian/control.tmp debian/control
 
 
+generated-files: control-file
+	: # We have to prepare the various control files
 
-clean: control-file
+	for f in debian/*.in; do \
+	  f2=`echo $$f | sed "s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
+	  if [ $$f2 != debian/control ]; then \
+	    sed -e "s/@PVER@/$(PVER)/g;s/@VER@/$(VER)/g;s/@SVER@/$(SVER)/g" \
+		    -e "s/@PRIORITY@/$(PRIORITY)/g" \
+		    -e "s,@SCRIPTDIR@,/$(scriptdir),g" \
+		    -e "s,@INFO@,$(info_docs),g" \
+		  <$$f >$$f2; \
+	  fi; \
+	done
+
+
+clean: generated-files
 	dh_testdir
 	dh_testroot
 	rm -rf stamps
@@ -640,25 +660,14 @@ clean: control-file
 
 	for f in debian/*.in; do \
 	  f2=`echo $$f | sed "s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
-	  if [ $$f2 != debian/control ] && [ $$f2 != debian/source.lintian-overrides ]; then \
+	  if [[ "$(PRESERVE_FILES)" != *"$$f2"* ]]; then \
 	    rm -f $$f2; \
 	  fi; \
 	done
 	dh_clean
 
-stamps/stamp-control:
-	: # We have to prepare the various control files
-
-	for f in debian/*.in; do \
-	  f2=`echo $$f | sed "s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
-	  if [ $$f2 != debian/control ]; then \
-	    sed -e "s/@PVER@/$(PVER)/g;s/@VER@/$(VER)/g;s/@SVER@/$(SVER)/g" \
-		    -e "s/@PRIORITY@/$(PRIORITY)/g" \
-		    -e "s,@SCRIPTDIR@,/$(scriptdir),g" \
-		    -e "s,@INFO@,$(info_docs),g" \
-		  <$$f >$$f2; \
-	  fi; \
-	done
+stamps/stamp-control: generated-files
+	touch stamps/stamp-control
 
 2to3-man:
 	help2man --no-info --version-string=$(VER) --no-discard-stderr \

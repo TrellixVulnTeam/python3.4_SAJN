@@ -1,7 +1,8 @@
 Source: python3.4
 Section: python
 Priority: optional
-Maintainer: Matthias Klose <doko@debian.org>
+Maintainer: Felix Krull <f_krull@gmx.de>
+XSBC-Original-Maintainer: Matthias Klose <doko@debian.org>
 Build-Depends: debhelper (>= 5.0.51~), quilt, autoconf, lsb-release, sharutils,
   libreadline6-dev, libncursesw5-dev (>= 5.3),
   zlib1g-dev, libbz2-dev, liblzma-dev,
@@ -13,12 +14,13 @@ Build-Depends: debhelper (>= 5.0.51~), quilt, autoconf, lsb-release, sharutils,
   libsqlite3-dev, libffi-dev (>= 3.0.5),
   libgpm2 [!hurd-i386 !kfreebsd-i386 !kfreebsd-amd64],
   mime-support, netbase, bzip2, python3:any,
-  gcc (>= 4:4.8) [amd64 armel armhf i386 x32 kfreebsd-any hurd-any],
   net-tools, xvfb, xauth
 Build-Depends-Indep: python-sphinx
 Standards-Version: 3.9.5
-Vcs-Browser: https://code.launchpad.net/~doko/python/pkg3.4-debian
-Vcs-Bzr: http://bazaar.launchpad.net/~doko/python/pkg3.4-debian
+Vcs-Browser: https://bitbucket.org/fk/deadsnakes-python3.4
+Vcs-Hg: https://bitbucket.org/fk/deadsnakes-python3.4
+X-Original-Vcs-Browser: https://code.launchpad.net/~doko/python/pkg3.4-debian
+X-Original-Vcs-Bzr: http://bazaar.launchpad.net/~doko/python/pkg3.4-debian
 XS-Testsuite: autopkgtest
 
 Package: python3.4

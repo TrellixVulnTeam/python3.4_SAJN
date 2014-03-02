@@ -1,11 +1,9 @@
 # DP: Comment out constant exposed on the API which are not implemented on
 # DP: GNU/Hurd. They would not work at runtime anyway.
 
-Index: b/Modules/socketmodule.c
-===================================================================
 --- a/Modules/socketmodule.c
 +++ b/Modules/socketmodule.c
-@@ -6199,9 +6199,11 @@
+@@ -6129,9 +6129,11 @@
  #ifdef  SO_OOBINLINE
      PyModule_AddIntMacro(m, SO_OOBINLINE);
  #endif
@@ -17,11 +15,9 @@ Index: b/Modules/socketmodule.c
  #ifdef  SO_SNDBUF
      PyModule_AddIntMacro(m, SO_SNDBUF);
  #endif
-Index: b/Modules/posixmodule.c
-===================================================================
 --- a/Modules/posixmodule.c
 +++ b/Modules/posixmodule.c
-@@ -11693,12 +11693,14 @@
+@@ -11724,12 +11724,14 @@
  #ifdef O_LARGEFILE
      if (PyModule_AddIntMacro(m, O_LARGEFILE)) return -1;
  #endif

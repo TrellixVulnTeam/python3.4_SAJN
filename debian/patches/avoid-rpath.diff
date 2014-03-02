@@ -1,10 +1,8 @@
 # DP: avoid runtime library path for some extension modules.
 
-Index: b/setup.py
-===================================================================
 --- a/setup.py
 +++ b/setup.py
-@@ -1026,6 +1026,15 @@
+@@ -1021,6 +1021,15 @@
                  print("bsddb lib dir:", dblib_dir, " inc dir:", db_incdir)
              db_incs = [db_incdir]
              dblibs = [dblib]
@@ -20,7 +18,7 @@ Index: b/setup.py
          else:
              if db_setup_debug: print("db: no appropriate library found")
              db_incs = None
-@@ -1136,6 +1145,9 @@
+@@ -1131,6 +1140,9 @@
              # can end up with a bad search path order.
              if sqlite_incdir not in self.compiler.include_dirs:
                  include_dirs.append(sqlite_incdir)

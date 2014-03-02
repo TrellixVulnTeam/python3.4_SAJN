@@ -1,7 +1,5 @@
 # DP: Proper handling of packages in linecache.py
 
-Index: b/Lib/linecache.py
-===================================================================
 --- a/Lib/linecache.py
 +++ b/Lib/linecache.py
 @@ -109,6 +109,11 @@

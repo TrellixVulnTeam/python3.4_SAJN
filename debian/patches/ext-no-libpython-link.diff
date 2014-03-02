@@ -1,7 +1,5 @@
 # DP: Don't link extensions with the shared libpython library.
 
-Index: b/Lib/distutils/command/build_ext.py
-===================================================================
 --- a/Lib/distutils/command/build_ext.py
 +++ b/Lib/distutils/command/build_ext.py
 @@ -245,7 +245,7 @@

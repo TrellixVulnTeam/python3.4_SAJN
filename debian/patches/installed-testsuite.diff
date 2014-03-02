@@ -3,8 +3,6 @@
 # DP:   - ctypes/test/test_macholib.py
 # DP:   - distutils/tests/test_bdist_wininst.py
 
-Index: b/Lib/test/test_sysconfig.py
-===================================================================
 --- a/Lib/test/test_sysconfig.py
 +++ b/Lib/test/test_sysconfig.py
 @@ -338,6 +338,7 @@

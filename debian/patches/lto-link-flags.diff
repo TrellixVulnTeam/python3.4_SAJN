@@ -1,5 +1,3 @@
-Index: b/Makefile.pre.in
-===================================================================
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
 @@ -128,7 +128,7 @@
@@ -11,7 +9,7 @@ Index: b/Makefile.pre.in
  LDCXXSHARED=	@LDCXXSHARED@
  DESTSHARED=	$(BINLIBDEST)/lib-dynload
  
-@@ -528,7 +528,7 @@
+@@ -533,7 +533,7 @@
  
  # Build the interpreter
  $(BUILDPYTHON):	Modules/python.o $(LIBRARY) $(LDLIBRARY) $(PY3LIBRARY)

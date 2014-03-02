@@ -1,10 +1,8 @@
 # DP: Fix ncurses configure checks
 
-Index: b/configure.ac
-===================================================================
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1533,11 +1533,9 @@
+@@ -1546,11 +1546,9 @@
  
  # checks for header files
  AC_HEADER_STDC
@@ -18,7 +16,7 @@ Index: b/configure.ac
  sched.h shadow.h signal.h stdint.h stropts.h termios.h \
  unistd.h utime.h \
  poll.h sys/devpoll.h sys/epoll.h sys/poll.h \
-@@ -1549,7 +1547,6 @@
+@@ -1562,7 +1560,6 @@
  libutil.h sys/resource.h netpacket/packet.h sysexits.h bluetooth.h \
  bluetooth/bluetooth.h linux/tipc.h spawn.h util.h alloca.h endian.h \
  sys/endian.h)
@@ -26,7 +24,7 @@ Index: b/configure.ac
  AC_HEADER_DIRENT
  AC_HEADER_MAJOR
  
-@@ -1569,14 +1566,6 @@
+@@ -1582,14 +1579,6 @@
  #endif
  ])
  
@@ -41,7 +39,7 @@ Index: b/configure.ac
  # On Linux, netlink.h requires asm/types.h
  AC_CHECK_HEADERS(linux/netlink.h,,,[
  #ifdef HAVE_ASM_TYPES_H
-@@ -4388,8 +4377,19 @@
+@@ -4401,8 +4390,19 @@
    [Define if you have struct stat.st_mtimensec])
  fi
  

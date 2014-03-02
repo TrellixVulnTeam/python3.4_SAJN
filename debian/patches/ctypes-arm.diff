@@ -1,8 +1,6 @@
-Index: b/Lib/ctypes/util.py
-===================================================================
 --- a/Lib/ctypes/util.py
 +++ b/Lib/ctypes/util.py
-@@ -198,16 +198,27 @@
+@@ -201,16 +201,27 @@
  
          def _findSoname_ldconfig(name):
              import struct

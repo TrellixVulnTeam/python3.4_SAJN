@@ -1,7 +1,5 @@
 # DP: Avoid shutil import when it is not available.
 
-Index: b/Lib/tempfile.py
-===================================================================
 --- a/Lib/tempfile.py
 +++ b/Lib/tempfile.py
 @@ -31,7 +31,146 @@

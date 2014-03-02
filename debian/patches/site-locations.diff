@@ -1,7 +1,5 @@
 # DP: Set site-packages/dist-packages
 
-Index: b/Lib/site.py
-===================================================================
 --- a/Lib/site.py
 +++ b/Lib/site.py
 @@ -7,12 +7,18 @@

@@ -1,5 +1,3 @@
-Index: b/Lib/distutils/dir_util.py
-===================================================================
 --- a/Lib/distutils/dir_util.py
 +++ b/Lib/distutils/dir_util.py
 @@ -96,6 +96,9 @@
@@ -32,8 +30,6 @@ Index: b/Lib/distutils/dir_util.py
  
          if n.startswith('.nfs'):
              # skip NFS rename files
-Index: b/Lib/distutils/command/install_lib.py
-===================================================================
 --- a/Lib/distutils/command/install_lib.py
 +++ b/Lib/distutils/command/install_lib.py
 @@ -56,6 +56,7 @@
@@ -61,8 +57,6 @@ Index: b/Lib/distutils/command/install_lib.py
              outfiles = self.copy_tree(self.build_dir, self.install_dir)
          else:
              self.warn("'%s' does not exist -- no Python modules to install" %
-Index: b/Lib/distutils/command/install.py
-===================================================================
 --- a/Lib/distutils/command/install.py
 +++ b/Lib/distutils/command/install.py
 @@ -207,6 +207,7 @@

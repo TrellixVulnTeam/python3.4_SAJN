@@ -1,5 +1,3 @@
-Index: b/Python/pythonrun.c
-===================================================================
 --- a/Python/pythonrun.c
 +++ b/Python/pythonrun.c
 @@ -67,6 +67,10 @@

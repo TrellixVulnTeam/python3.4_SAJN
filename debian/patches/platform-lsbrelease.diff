@@ -1,10 +1,8 @@
 # DP: Use /etc/lsb-release to identify the platform.
 
-Index: b/Lib/platform.py
-===================================================================
 --- a/Lib/platform.py
 +++ b/Lib/platform.py
-@@ -261,7 +261,7 @@
+@@ -265,7 +265,7 @@
  _supported_dists = (
      'SuSE', 'debian', 'fedora', 'redhat', 'centos',
      'mandrake', 'mandriva', 'rocks', 'slackware', 'yellowdog', 'gentoo',
@@ -13,7 +11,7 @@ Index: b/Lib/platform.py
  
  def _parse_release_file(firstline):
  
-@@ -290,6 +290,10 @@
+@@ -294,6 +294,10 @@
              id = l[1]
      return '', version, id
  
@@ -24,7 +22,7 @@ Index: b/Lib/platform.py
  def linux_distribution(distname='', version='', id='',
  
                         supported_dists=_supported_dists,
-@@ -314,6 +318,25 @@
+@@ -318,6 +322,25 @@
          args given as parameters.
  
      """
@@ -48,5 +46,5 @@ Index: b/Lib/platform.py
 +            pass
 +
      try:
-         etc = os.listdir('/etc')
+         etc = os.listdir(_UNIXCONFDIR)
      except OSError:

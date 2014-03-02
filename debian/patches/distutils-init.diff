@@ -1,10 +1,8 @@
 # DP: Use _sysconfigdata.py in distutils to initialize distutils
 
-Index: b/Lib/distutils/sysconfig.py
-===================================================================
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
-@@ -447,49 +447,11 @@
+@@ -449,49 +449,11 @@
  
  def _init_posix():
      """Initialize the module as appropriate for POSIX systems."""

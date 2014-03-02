@@ -1,7 +1,5 @@
 # DP: adjust locations of directories to debian policy
 
-Index: b/Lib/pydoc.py
-===================================================================
 --- a/Lib/pydoc.py
 +++ b/Lib/pydoc.py
 @@ -27,6 +27,10 @@
@@ -15,8 +13,6 @@ Index: b/Lib/pydoc.py
      http://docs.python.org/X.Y/library/
  
  This can be overridden by setting the PYTHONDOCS environment variable
-Index: b/Misc/python.man
-===================================================================
 --- a/Misc/python.man
 +++ b/Misc/python.man
 @@ -330,7 +330,7 @@

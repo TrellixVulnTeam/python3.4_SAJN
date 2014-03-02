@@ -2,8 +2,6 @@
 # DP: the python build, when CFLAGS, CPPFLAGS, LDSHARED) are not set
 # DP: in the environment.
 
-Index: b/Lib/distutils/sysconfig.py
-===================================================================
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
 @@ -187,9 +187,11 @@

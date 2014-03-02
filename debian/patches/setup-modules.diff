@@ -1,7 +1,5 @@
 # DP: Modules/Setup.dist: patches to build some extensions statically
 
-Index: b/Modules/Setup.dist
-===================================================================
 --- a/Modules/Setup.dist
 +++ b/Modules/Setup.dist
 @@ -175,7 +175,7 @@

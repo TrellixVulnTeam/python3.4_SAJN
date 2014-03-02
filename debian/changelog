@@ -1,3 +1,10 @@
+python3.4 (3.4~rc2-1+precise1) UNRELEASED; urgency=low
+
+  * Initial deadsnakes release.
+  * Upstream release Python 3.4rc2.
+
+ -- Felix Krull <f_krull@gmx.de>  Sun, 02 Mar 2014 22:46:47 +0100
+
 python3.4 (3.4~rc1-1) unstable; urgency=medium
 
   * Python 3.4 release candidate 1.

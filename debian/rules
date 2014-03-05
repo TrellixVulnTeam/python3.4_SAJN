@@ -282,7 +282,6 @@ common_configure_args = \
 		--with-computed-gotos \
 		--without-ensurepip \
 		--with-system-expat \
-		--with-system-libmpdec \
 
 ifeq ($(DEB_HOST_ARCH), avr32)
   common_configure_args += --without-ffi

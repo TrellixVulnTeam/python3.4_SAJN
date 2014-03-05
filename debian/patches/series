@@ -44,3 +44,4 @@ test-no-random-order.diff
 kfreebsd-testsuite.diff
 multiarch-extname.diff
 tempfile-minimal.diff
+7358ca69f351-fix-sphinx-1.1-docs-build.diff

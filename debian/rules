@@ -715,7 +715,7 @@ endif
 	find $(d)/usr/lib/python$(VER) -name '*_failed*.so' | xargs -r rm -f
 
 	: # FIXME: don't ship ensurepip for now
-	rm -rf $(d)/usr/lib/python$(VER)/ensurepip
+	#rm -rf $(d)/usr/lib/python$(VER)/ensurepip
 
 	for i in $(d)/$(scriptdir)/lib-dynload/*.so; do \
 	  b=$$(basename $$i .cpython-34m.so); \

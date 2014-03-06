@@ -74,7 +74,7 @@ Conflicts: binfmt-support (<< 1.1.2)
 Replaces: libpython3.4-stdlib (<< 3.4~b1-5)
 Description: Minimal subset of the Python language (version 3.4)
  This package contains some essential modules. It is normally not
- used on it's own, but as a dependency of python3.4-minimal.
+ used on its own, but as a dependency of python3.4-minimal.
 
 Package: libpython3.4
 Architecture: any

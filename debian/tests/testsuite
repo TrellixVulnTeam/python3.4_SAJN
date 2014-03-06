@@ -2,27 +2,10 @@
 
 set -e
 
-if [ "$(whoami)" = root ]; then
-  # stop apport
-  stop apport 2>/dev/null || true
-  sed -i '/^enabled=/s/=.*/=0/' /etc/default/apport 2>/dev/null
-  # don't change anything when runnning as nobody
-  if [ -n "$SUDO_USER" ]; then
-    if [ -n "$TMPDIR" ] && [ -d "$TMPDIR" ]; then
-      chown -R $SUDO_USER $TMPDIR
-    fi
-    if [ -n "$ADTTMP" ] && [ -d "$ADTTMP" ]; then
-      chown -R $SUDO_USER $ADTTMP
-    fi
-  fi
-  su_user=${SUDO_USER:-nobody}
-fi
-# no root access needed after this point
-
-if status apport | grep -q start; then
-  echo >&2 "apport is running. needs to be disabled before running the tests"
-  exit 1
-fi
+#if [ "$(whoami)" = root ]; then
+#  # stop apport
+#  stop apport 2> /dev/null || true
+#fi
 
 debian_dir=$(dirname $(dirname $0))
 
@@ -39,75 +22,61 @@ TESTEXCLUSIONS="-x"
 TESTEXCLUSIONS="$TESTEXCLUSIONS test_cmd_line_script"
 
 # test_code_module: Issue 17756, reason unknown
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_code_module"
+#TESTEXCLUSIONS="$TESTEXCLUSIONS test_code_module"
 
 # test_compileall: FIXME, https://launchpad.net/bugs/1264554
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_compileall"
+#TESTEXCLUSIONS="$TESTEXCLUSIONS test_compileall"
 
 # test_curses: Don't run for now, issue with new curses?
 TESTEXCLUSIONS="$TESTEXCLUSIONS test_curses"
 
 # test_dbm: Fails from time to time ...
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_dbm"
+#TESTEXCLUSIONS="$TESTEXCLUSIONS test_dbm"
 
 # test_distutils: Issue 17752, many failures in installed location
 TESTEXCLUSIONS="$TESTEXCLUSIONS test_distutils"
 
 # test_ensurepip: not yet installed, http://bugs.debian.org/732703
 # ... and then test_venv fails too
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_ensurepip test_venv "
+#TESTEXCLUSIONS="$TESTEXCLUSIONS test_ensurepip test_venv "
 
 # test_gdb: not run for the optimized build
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_gdb"
+#TESTEXCLUSIONS="$TESTEXCLUSIONS test_gdb"
+
+# test_ossaudiodev: no /dev/dsp?
+TESTEXCLUSIONS="$TESTEXCLUSIONS test_ossaudiodev"
 
 # test_platform: Issue 17762 needs upstreaming
 TESTEXCLUSIONS="$TESTEXCLUSIONS test_platform "
 
 # test_pydoc: Issue 17763, interfers with packages in dist-packages
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_pydoc"
+#TESTEXCLUSIONS="$TESTEXCLUSIONS test_pydoc"
 
 # test_site: FIXME, https://launchpad.net/bugs/1264554
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_site "
+#TESTEXCLUSIONS="$TESTEXCLUSIONS test_site "
 
 # test_tools: not relevant for installed version
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_tools"
+#TESTEXCLUSIONS="$TESTEXCLUSIONS test_tools"
 
 # test_zipfile: Issue 17753, requires write access to test and email.test
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_zipfile"
+#TESTEXCLUSIONS="$TESTEXCLUSIONS test_zipfile"
 
 # test_zipimport_support: FIXME, https://launchpad.net/bugs/1264554
 TESTEXCLUSIONS="$TESTEXCLUSIONS test_zipimport_support"
 
 # test_subprocess: Issue 17757, two failing tests
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_subprocess"
+#TESTEXCLUSIONS="$TESTEXCLUSIONS test_subprocess"
 
 # test_uuid: fails, but not on the buildd. need to investigate
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_uuid"
-
-if [ "$(whoami)" = root ]; then
-  su_user=${SUDO_USER:-nobody}
-fi
-
-if [ "$su_user" = nobody ]; then
-  log=/dev/null
-  # test_site: Issue 17758, fails to create HOME
-  TESTEXCLUSIONS="$TESTEXCLUSIONS test_site"
-else
-  log=testsuite.log
-fi
+#TESTEXCLUSIONS="$TESTEXCLUSIONS test_uuid"
 
 script=$debian_dir/script.py
 if [ -f "$script" ]; then
-  cmd="python3.4 $script \"$log\" \"$TESTPYTHON $TESTOPTS $TESTEXCLUSIONS\""
+  cmd="python3.4 $script \"testsuite.log\" \"$TESTPYTHON $TESTOPTS $TESTEXCLUSIONS\""
 else
   cmd="$TESTPYTHON $TESTOPTS $TESTEXCLUSIONS"
 fi
 
 echo "Running the python testsuite with the standard interpreter:"
-if [ "$(whoami)" = root ]; then
-  echo "su -c $cmd $su_user"
-  su -c "$cmd" $su_user
-else
-  echo "$cmd"
-  eval $cmd
-fi
+echo "$cmd"
+eval $cmd

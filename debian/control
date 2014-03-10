@@ -3,7 +3,7 @@ Section: python
 Priority: optional
 Maintainer: Felix Krull <f_krull@gmx.de>
 XSBC-Original-Maintainer: Matthias Klose <doko@debian.org>
-Build-Depends: debhelper (>= 5.0.51~), quilt, autoconf, lsb-release, sharutils,
+Build-Depends: debhelper (>= 5.0.51~), dpkg-dev (>= 1.16.1~), quilt, autoconf, lsb-release, sharutils,
   libreadline6-dev, libncursesw5-dev (>= 5.3),
   zlib1g-dev, libbz2-dev, liblzma-dev,
   libgdbm-dev, libdb-dev,

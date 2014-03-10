@@ -31,7 +31,7 @@ TESTEXCLUSIONS="$TESTEXCLUSIONS test_cmd_line_script"
 TESTEXCLUSIONS="$TESTEXCLUSIONS test_curses"
 
 # test_dbm: Fails from time to time ...
-#TESTEXCLUSIONS="$TESTEXCLUSIONS test_dbm"
+TESTEXCLUSIONS="$TESTEXCLUSIONS test_dbm"
 
 # test_distutils: Issue 17752, many failures in installed location
 TESTEXCLUSIONS="$TESTEXCLUSIONS test_distutils"
@@ -53,7 +53,7 @@ TESTEXCLUSIONS="$TESTEXCLUSIONS test_platform "
 #TESTEXCLUSIONS="$TESTEXCLUSIONS test_pydoc"
 
 # test_site: FIXME, https://launchpad.net/bugs/1264554
-#TESTEXCLUSIONS="$TESTEXCLUSIONS test_site "
+TESTEXCLUSIONS="$TESTEXCLUSIONS test_site "
 
 # test_tools: not relevant for installed version
 #TESTEXCLUSIONS="$TESTEXCLUSIONS test_tools"

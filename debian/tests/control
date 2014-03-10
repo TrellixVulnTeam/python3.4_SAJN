@@ -1,5 +1,0 @@
-Tests: testsuite
-Depends: build-essential, locales, python3.4-complete
-
-Tests: testsuite-dbg
-Depends: build-essential, locales, gdb, python3.4-complete

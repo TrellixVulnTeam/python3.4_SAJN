@@ -1,7 +1,7 @@
-python3.4 (3.4~rc2-1+precise1) UNRELEASED; urgency=low
+python3.4 (3.4~rc3-1+precise1) UNRELEASED; urgency=low
 
   * Initial deadsnakes release.
-  * Upstream release Python 3.4rc2.
+  * Upstream release Python 3.4rc3.
 
  -- Felix Krull <f_krull@gmx.de>  Sun, 02 Mar 2014 22:46:47 +0100
 

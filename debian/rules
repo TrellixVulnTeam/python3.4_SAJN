@@ -65,7 +65,7 @@ distribution := $(shell lsb_release -is)
 distrelease  := $(shell lsb_release -cs)
 
 VER=3.4
-SVER=3.4~b1
+SVER=3.4~rc2
 NVER=3.5
 PVER=python3.4
 PRIORITY=$(shell echo $(VER) | tr -d '.')0
@@ -192,16 +192,16 @@ p_idle		:= idle-$(PVER)
 p_doc		:= $(PVER)-doc
 p_dbg		:= $(PVER)-dbg
 p_udeb		:= $(PVER)-udeb
-p_tk		:= $(PVER)-tk
-p_tk_dbg	:= $(PVER)-tk-dbg
-p_gdbm		:= $(PVER)-gdbm
-p_gdbm_dbg	:= $(PVER)-gdbm-dbg
 
 p_lbase		:= lib$(PVER)-stdlib
 p_lmin		:= lib$(PVER)-minimal
 p_ldev		:= lib$(PVER)-dev
 p_ldbg		:= lib$(PVER)-dbg
 p_ltst		:= lib$(PVER)-testsuite
+p_tk		:= lib$(PVER)-tk
+p_tk_dbg	:= lib$(PVER)-tk-dbg
+p_gdbm		:= lib$(PVER)-gdbm
+p_gdbm_dbg	:= lib$(PVER)-gdbm-dbg
 
 d_base		:= debian/$(p_base)
 d_min		:= debian/$(p_min)

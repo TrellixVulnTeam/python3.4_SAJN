@@ -1,2 +1,0 @@
-# lintian omission, multiarch string is encoded in the filename
-@PVER@-gdbm binary: arch-dependent-file-not-in-arch-specific-directory

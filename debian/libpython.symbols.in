@@ -1196,6 +1196,7 @@
  _PyMethodWrapper_Type@Base @SVER@
  _PyMethod_DebugMallocStats@Base @SVER@
  _PyModule_Clear@Base @SVER@
+ _PyModule_ClearDict@Base 3.4~rc3
  _PyNamespace_New@Base @SVER@
  _PyNamespace_Type@Base @SVER@
  _PyNode_SizeOf@Base @SVER@

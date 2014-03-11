@@ -420,8 +420,8 @@ def add_ui(db):
 
     compileargs = r'-Wi "[TARGETDIR]Lib\compileall.py" -f -x "bad_coding|badsyntax|site-packages|py2_|lib2to3\\tests|venv\\scripts" "[TARGETDIR]Lib"'
     lib2to3args = r'-c "import lib2to3.pygram, lib2to3.patcomp;lib2to3.patcomp.PatternCompiler()"'
-    updatepipargs = r'-m ensurepip -U'
-    removepipargs = r'-m ensurepip._uninstall'
+    updatepipargs = r'-m ensurepip -U --default-pip'
+    removepipargs = r'-B -m ensurepip._uninstall'
     # See "CustomAction Table"
     add_data(db, "CustomAction", [
         # msidbCustomActionTypeFirstSequence + msidbCustomActionTypeTextData + msidbCustomActionTypeProperty
@@ -1324,8 +1324,6 @@ def add_registry(db):
         tcltkshortcuts = [
               ("IDLE", "MenuDir", "IDLE|IDLE (Python GUI)", "pythonw.exe",
                tcltk.id, r'"[TARGETDIR]Lib\idlelib\idle.pyw"', None, None, "python_icon.exe", 0, None, "TARGETDIR"),
-              ("PyDoc", "MenuDir", "MODDOCS|Module Docs", "pythonw.exe",
-               tcltk.id, r'"[TARGETDIR]Tools\scripts\pydocgui.pyw"', None, None, "python_icon.exe", 0, None, "TARGETDIR"),
               ]
     add_data(db, "Shortcut",
              tcltkshortcuts +
@@ -1340,6 +1338,8 @@ def add_registry(db):
               ("Manual", "MenuDir", "MANUAL|Python Manuals", "REGISTRY.doc",
                "[#%s]" % docfile, None,
                None, None, None, None, None, None),
+              ("PyDoc", "MenuDir", "MODDOCS|Module Docs", "python.exe",
+               default_feature.id, r'-m pydoc -b', None, None, "python_icon.exe", 0, None, "TARGETDIR"),
               ("Uninstall", "MenuDir", "UNINST|Uninstall Python", "REGISTRY",
                SystemFolderName+"msiexec",  "/x%s" % product_code,
                None, None, None, None, None, None),

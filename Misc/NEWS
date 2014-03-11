@@ -2,6 +2,42 @@
 Python News
 +++++++++++
 
+What's New in Python 3.4.0 release candidate 3?
+===============================================
+Release date: 2014-03-09
+
+Core and Builtins
+-----------------
+
+- Issue #20786: Fix signatures for dict.__delitem__ and
+  property.__delete__ builtins.
+
+Library
+-------
+
+- Issue #20839: Don't trigger a DeprecationWarning in the still supported
+  pkgutil.get_loader() API when __loader__ isn't set on a module (nor
+  when pkgutil.find_loader() is called directly).
+
+Build
+-----
+
+- Issue #14512: Launch pydoc -b instead of pydocgui.pyw on Windows.
+
+- Issue #20748: Uninstalling pip does not leave behind the pyc of
+  the uninstaller anymore.
+
+- Issue #20568: The Windows installer now installs the unversioned ``pip``
+  command in addition to the versioned ``pip3`` and ``pip3.4`` commands.
+
+- Issue #20757: The ensurepip helper for the Windows uninstaller now skips
+  uninstalling pip (rather than failing) if the user has updated pip to a
+  different version from the one bundled with ensurepip.
+
+- Issue #20465: Update OS X and Windows installer builds to use
+  SQLite 3.8.3.1.
+
+
 What's New in Python 3.4.0 release candidate 2?
 ===============================================
 
@@ -88,6 +124,9 @@ Release date: 2014-02-10
 
 Core and Builtins
 -----------------
+
+- Issue #19255: The builtins module is restored to initial value before
+  cleaning other modules.  The sys and builtins modules are cleaned last.
 
 - Issue #20437: Fixed 22 potential bugs when deleting objects references.
 

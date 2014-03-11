@@ -240,10 +240,8 @@ class PyBuildExt(build_ext):
         # unfortunately, distutils doesn't let us provide separate C and C++
         # compilers
         if compiler is not None:
-            (ccshared, cppflags, cflags) = \
-                sysconfig.get_config_vars('CCSHARED', 'CPPFLAGS', 'CFLAGS')
-            cppflags = ' '.join([f for f in cppflags.split() if not f.startswith('-I')])
-            args['compiler_so'] = compiler + ' ' + ccshared + ' ' + cppflags + ' ' + cflags
+            (ccshared,cflags) = sysconfig.get_config_vars('CCSHARED','CFLAGS')
+            args['compiler_so'] = compiler + ' ' + ccshared + ' ' + cflags
         self.compiler.set_executables(**args)
 
         build_ext.build_extensions(self)
@@ -443,7 +441,12 @@ class PyBuildExt(build_ext):
             os.unlink(tmpfile)
 
     def detect_modules(self):
-        # On Debian /usr/local is always used, so we don't include it twice
+        # Ensure that /usr/local is always used, but the local build
+        # directories (i.e. '.' and 'Include') must be first.  See issue
+        # 10520.
+        if not cross_compiling:
+            add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
+            add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
         # only change this for cross builds for 3.3, issues on Mageia
         if cross_compiling:
             self.add_gcc_paths()
@@ -1021,15 +1024,6 @@ class PyBuildExt(build_ext):
                 print("bsddb lib dir:", dblib_dir, " inc dir:", db_incdir)
             db_incs = [db_incdir]
             dblibs = [dblib]
-            # only add db_incdir/dblib_dir if not in the standard paths
-            # avoids a runtime library path for a system library dir
-            if db_incdir in inc_dirs:
-                db_incs = []
-            else:
-                db_incs = [db_incdir]
-            if dblib_dir[0] in lib_dirs:
-                dblib_dir = []
-            dblibs = [dblib]
         else:
             if db_setup_debug: print("db: no appropriate library found")
             db_incs = None
@@ -1140,9 +1134,6 @@ class PyBuildExt(build_ext):
             # can end up with a bad search path order.
             if sqlite_incdir not in self.compiler.include_dirs:
                 include_dirs.append(sqlite_incdir)
-            # avoid a runtime library path for a system library dir
-            if sqlite_libdir and sqlite_libdir[0] in lib_dirs:
-                sqlite_libdir = None
             exts.append(Extension('_sqlite3', sqlite_srcs,
                                   define_macros=sqlite_defines,
                                   include_dirs=include_dirs,
@@ -1313,9 +1304,6 @@ class PyBuildExt(build_ext):
                                    libraries = [panel_library] + curses_libs) )
         else:
             missing.append('_curses_panel')
-
-        #fpectl fpectlmodule.c ...
-        exts.append( Extension('fpectl', ['fpectlmodule.c']) )
 
         # Andrew Kuchling's zlib module.  Note that some versions of zlib
         # 1.1.3 have security problems.  See CERT Advisory CA-2002-07:
@@ -1948,7 +1936,7 @@ class PyBuildExt(build_ext):
                         break
         ffi_lib = None
         if ffi_inc is not None:
-            for lib_name in ('ffi', 'ffi_convenience', 'ffi_pic', 'ffi'):
+            for lib_name in ('ffi_convenience', 'ffi_pic', 'ffi'):
                 if (self.compiler.find_library_file(lib_dirs, lib_name)):
                     ffi_lib = lib_name
                     break

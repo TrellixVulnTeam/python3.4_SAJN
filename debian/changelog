@@ -1,3 +1,9 @@
+python3.4 (3.4~rc3-1+saucy1) saucy; urgency=low
+
+  * Imported from Precise package.
+
+ -- Felix Krull <f_krull@gmx.de>  Wed, 12 Mar 2014 03:55:30 +0100
+
 python3.4 (3.4~rc3-1+precise1) precise; urgency=low
 
   * Initial deadsnakes release.

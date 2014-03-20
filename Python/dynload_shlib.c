@@ -36,9 +36,6 @@ const char *_PyImport_DynLoadFiletab[] = {
 #ifdef __CYGWIN__
     ".dll",
 #else  /* !__CYGWIN__ */
-#ifdef MULTIARCH
-    "." SOABI "-" MULTIARCH ".so",
-#endif
     "." SOABI ".so",
     ".abi" PYTHON_ABI_STRING ".so",
     ".so",

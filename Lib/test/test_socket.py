@@ -867,7 +867,7 @@ class GeneralModuleTests(unittest.TestCase):
         # Find one service that exists, then check all the related interfaces.
         # I've ordered this by protocols that have both a tcp and udp
         # protocol, at least for modern Linuxes.
-        if (sys.platform.startswith(('freebsd', 'netbsd', 'gnukfreebsd'))
+        if (sys.platform.startswith(('freebsd', 'netbsd'))
             or sys.platform in ('linux', 'darwin')):
             # avoid the 'echo' service on this platform, as there is an
             # assumption breaking non-standard port/protocol entry

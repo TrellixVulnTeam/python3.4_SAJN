@@ -1,6 +1,6 @@
 --- a/Python/pythonrun.c
 +++ b/Python/pythonrun.c
-@@ -67,6 +67,10 @@
+@@ -71,6 +71,10 @@
  }
  #endif
  

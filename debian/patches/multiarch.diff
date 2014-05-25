@@ -137,7 +137,7 @@
      ns = _PyNamespace_New(impl_info);
 --- a/configure.ac
 +++ b/configure.ac
-@@ -4109,7 +4109,7 @@
+@@ -4098,7 +4098,7 @@
  
  dnl define LIBPL after ABIFLAGS and LDVERSION is defined.
  AC_SUBST(PY_ENABLE_SHARED)

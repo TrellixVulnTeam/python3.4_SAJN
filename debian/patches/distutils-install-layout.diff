@@ -228,7 +228,7 @@
      def test_debug_mode(self):
 --- a/Lib/pydoc.py
 +++ b/Lib/pydoc.py
-@@ -403,6 +403,7 @@
+@@ -404,6 +404,7 @@
                                   'marshal', 'posix', 'signal', 'sys',
                                   '_thread', 'zipimport') or
               (file.startswith(basedir) and

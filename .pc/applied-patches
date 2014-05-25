@@ -13,7 +13,6 @@ setup-modules.diff
 platform-lsbrelease.diff
 bdist-wininst-notfound.diff
 no-zip-on-sys.path.diff
-doc-nodownload.diff
 makesetup-bashism.diff
 hurd-disable-nonworking-constants.diff
 enable-fpectl.diff
@@ -26,16 +25,11 @@ ctypes-arm.diff
 link-timemodule.diff
 lto-link-flags.diff
 libffi-shared.diff
-avoid-rpath.diff
 multiarch.diff
-ncurses-configure.diff
 distutils-init.diff
 lib2to3-no-pickled-grammar.diff
 ext-no-libpython-link.diff
-kfreebsd-xattrs.diff
 installed-testsuite.diff
 test-no-random-order.diff
-kfreebsd-testsuite.diff
 multiarch-extname.diff
 tempfile-minimal.diff
-7358ca69f351-fix-sphinx-1.1-docs-build.diff

@@ -124,9 +124,10 @@ excluded_imports = {
     'reprlib': set(('_dummy_thread',)),
     #'socket': set(('_ssl',)),
     '_sitebuiltins': set(('pydoc',)),
-    'subprocess': set(('threading',)),
+    'subprocess': set(('dummy_threading',)),
     'sysconfig': set(('pprint','_osx_support')),
     'tempfile': set(('_dummy_thread', 'shutil')),
+    'threading': set(('_threading_local',)),
     }
 
 def main(argv):

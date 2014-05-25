@@ -1019,17 +1019,16 @@ class PyBuildExt(build_ext):
             if db_setup_debug:
                 print("bsddb using BerkeleyDB lib:", db_ver, dblib)
                 print("bsddb lib dir:", dblib_dir, " inc dir:", db_incdir)
-            db_incs = [db_incdir]
             dblibs = [dblib]
-            # only add db_incdir/dblib_dir if not in the standard paths
-            # avoids a runtime library path for a system library dir
+            # Only add the found library and include directories if they aren't
+            # already being searched. This avoids an explicit runtime library
+            # dependency.
             if db_incdir in inc_dirs:
-                db_incs = []
+                db_incs = None
             else:
                 db_incs = [db_incdir]
             if dblib_dir[0] in lib_dirs:
-                dblib_dir = []
-            dblibs = [dblib]
+                dblib_dir = None
         else:
             if db_setup_debug: print("db: no appropriate library found")
             db_incs = None
@@ -1147,7 +1146,6 @@ class PyBuildExt(build_ext):
                                   define_macros=sqlite_defines,
                                   include_dirs=include_dirs,
                                   library_dirs=sqlite_libdir,
-                                  runtime_library_dirs=sqlite_libdir,
                                   extra_link_args=sqlite_extra_link_args,
                                   libraries=["sqlite3",]))
         else:
@@ -1212,7 +1210,7 @@ class PyBuildExt(build_ext):
                                 libraries = gdbm_libs)
                             break
                 elif cand == "bdb":
-                    if db_incs is not None:
+                    if dblibs:
                         if dbm_setup_debug: print("building dbm using bdb")
                         dbmext = Extension('_dbm', ['_dbmmodule.c'],
                                            library_dirs=dblib_dir,

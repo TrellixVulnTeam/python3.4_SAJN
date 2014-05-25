@@ -1,9 +1,9 @@
-python3.4 (3.4.1-1+precise1) UNRELEASED; urgency=low
+python3.4 (3.4.1-1+precise1) precise; urgency=low
 
   * Imported new upstream release Python 3.4.1.
   * Removed apport support.
 
- -- Felix Krull <f_krull@gmx.de>  Sun, 25 May 2014 16:05:16 +0200
+ -- Felix Krull <f_krull@gmx.de>  Sun, 25 May 2014 23:58:55 +0200
 
 python3.4 (3.4.0-1+precise1) precise; urgency=low
 

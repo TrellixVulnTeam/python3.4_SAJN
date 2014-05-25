@@ -1546,9 +1546,11 @@ dnl AC_MSG_RESULT($cpp_type)
 
 # checks for header files
 AC_HEADER_STDC
-AC_CHECK_HEADERS(asm/types.h conio.h direct.h dlfcn.h errno.h \
+ac_save_cppflags="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS -I/usr/include/ncursesw"
+AC_CHECK_HEADERS(asm/types.h conio.h curses.h direct.h dlfcn.h errno.h \
 fcntl.h grp.h \
-ieeefp.h io.h langinfo.h libintl.h process.h pthread.h \
+ieeefp.h io.h langinfo.h libintl.h ncurses.h process.h pthread.h \
 sched.h shadow.h signal.h stdint.h stropts.h termios.h \
 unistd.h utime.h \
 poll.h sys/devpoll.h sys/epoll.h sys/poll.h \
@@ -1560,6 +1562,7 @@ sys/times.h sys/types.h sys/uio.h sys/un.h sys/utsname.h sys/wait.h pty.h \
 libutil.h sys/resource.h netpacket/packet.h sysexits.h bluetooth.h \
 bluetooth/bluetooth.h linux/tipc.h spawn.h util.h alloca.h endian.h \
 sys/endian.h)
+CPPFLAGS=$ac_save_cppflags
 AC_HEADER_DIRENT
 AC_HEADER_MAJOR
 
@@ -1576,6 +1579,14 @@ AC_CHECK_HEADERS([net/if.h], [], [],
 #endif
 #ifdef HAVE_SYS_SOCKET_H
 # include <sys/socket.h>
+#endif
+])
+
+
+# On Solaris, term.h requires curses.h
+AC_CHECK_HEADERS(term.h,,,[
+#ifdef HAVE_CURSES_H
+#include <curses.h>
 #endif
 ])
 
@@ -2039,8 +2050,8 @@ then
 		fi
 		;;
 	Linux*|GNU*|QNX*)
-		LDSHARED='$(CC) -shared -Wl,-O1 -Wl,-Bsymbolic-functions'
-		LDCXXSHARED='$(CXX) -shared -Wl,-O1 -Wl,-Bsymbolic-functions';;
+		LDSHARED='$(CC) -shared'
+		LDCXXSHARED='$(CXX) -shared';;
 	BSD/OS*/4*)
 		LDSHARED="gcc -shared"
 		LDCXXSHARED="g++ -shared";;
@@ -2138,7 +2149,7 @@ then
 	    LINKFORSHARED="-Wl,-E -Wl,+s";;
 #	    LINKFORSHARED="-Wl,-E -Wl,+s -Wl,+b\$(BINLIBDEST)/lib-dynload";;
 	BSD/OS/4*) LINKFORSHARED="-Xlinker -export-dynamic";;
-	Linux*|GNU*) LINKFORSHARED="-Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions";;
+	Linux*|GNU*) LINKFORSHARED="-Xlinker -export-dynamic";;
 	# -u libsys_s pulls in all symbols in libsys
 	Darwin/*) 
 		LINKFORSHARED="$extra_undefs -framework CoreFoundation"
@@ -3930,13 +3941,8 @@ int main(void) {
 AC_MSG_RESULT($ac_cv_posix_semaphores_enabled)
 if test $ac_cv_posix_semaphores_enabled = no
 then
-  case $ac_sys_system in
-    Linux*) # assume yes, see https://launchpad.net/bugs/630511
-      ;;
-    *)
-      AC_DEFINE(POSIX_SEMAPHORES_NOT_ENABLED, 1,
-                [Define if POSIX semaphores aren't enabled on your system])
-  esac
+  AC_DEFINE(POSIX_SEMAPHORES_NOT_ENABLED, 1,
+            [Define if POSIX semaphores aren't enabled on your system])
 fi
 
 # Multiprocessing check for broken sem_getvalue
@@ -3971,13 +3977,8 @@ int main(void){
 AC_MSG_RESULT($ac_cv_broken_sem_getvalue)
 if test $ac_cv_broken_sem_getvalue = yes
 then
-  case $ac_sys_system in
-    Linux*) # assume yes, see https://launchpad.net/bugs/630511
-      ;;
-    *)
-      AC_DEFINE(HAVE_BROKEN_SEM_GETVALUE, 1,
-      [define to 1 if your sem_getvalue is broken.])
-  esac
+  AC_DEFINE(HAVE_BROKEN_SEM_GETVALUE, 1,
+  [define to 1 if your sem_getvalue is broken.])
 fi
 
 # determine what size digit to use for Python's longs
@@ -4098,7 +4099,7 @@ AC_MSG_RESULT($LDVERSION)
 
 dnl define LIBPL after ABIFLAGS and LDVERSION is defined.
 AC_SUBST(PY_ENABLE_SHARED)
-LIBPL="${prefix}/lib/python${VERSION}/config-${LDVERSION}-${MULTIARCH}"
+LIBPL="${prefix}/lib/python${VERSION}/config-${LDVERSION}"
 AC_SUBST(LIBPL)
 
 # Check whether right shifting a negative integer extends the sign bit
@@ -4390,19 +4391,8 @@ then
   [Define if you have struct stat.st_mtimensec])
 fi
 
-# first curses header check
 ac_save_cppflags="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS -I/usr/include/ncursesw"
-
-AC_CHECK_HEADERS(curses.h ncurses.h)
-
-# On Solaris, term.h requires curses.h
-AC_CHECK_HEADERS(term.h,,,[
-#ifdef HAVE_CURSES_H
-#include <curses.h>
-#endif
-])
-
 # On HP/UX 11.0, mvwdelch is a block with a return statement
 AC_MSG_CHECKING(whether mvwdelch is an expression)
 AC_CACHE_VAL(ac_cv_mvwdelch_is_expression,

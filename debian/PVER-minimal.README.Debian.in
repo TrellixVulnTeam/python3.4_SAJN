@@ -128,6 +128,7 @@ are:
   syslog		extension
   tempfile		module
   textwrap		module
+  threading		module
   time			extension
   token			module
   tokenize		module

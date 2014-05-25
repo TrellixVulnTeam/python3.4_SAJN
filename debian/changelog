@@ -1,3 +1,9 @@
+python3.4 (3.4.1-1+quantal1) quantal; urgency=low
+
+  * Imported from Precise package.
+
+ -- Felix Krull <f_krull@gmx.de>  Mon, 26 May 2014 00:09:23 +0200
+
 python3.4 (3.4.1-1+precise1) precise; urgency=low
 
   * Imported new upstream release Python 3.4.1.

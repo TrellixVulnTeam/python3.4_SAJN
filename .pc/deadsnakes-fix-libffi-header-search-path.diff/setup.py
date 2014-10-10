@@ -5,7 +5,6 @@ import sys, os, importlib.machinery, re, optparse
 from glob import glob
 import importlib._bootstrap
 import importlib.util
-import subprocess
 import sysconfig
 
 from distutils import log
@@ -1935,10 +1934,7 @@ class PyBuildExt(build_ext):
             # in /usr/include/ffi
             inc_dirs.append('/usr/include/ffi')
 
-        ffi_inc = ["/usr/include/%s" % subprocess.check_output(
-                        "dpkg-architecture -qDEB_BUILD_GNU_TYPE",
-                        shell=True).decode("utf-8").strip(),
-                   sysconfig.get_config_var("LIBFFI_INCLUDEDIR")]
+        ffi_inc = [sysconfig.get_config_var("LIBFFI_INCLUDEDIR")]
         if not ffi_inc or ffi_inc[0] == '':
             ffi_inc = find_file('ffi.h', [], inc_dirs)
         if ffi_inc is not None:

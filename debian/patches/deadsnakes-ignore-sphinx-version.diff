@@ -1,0 +1,11 @@
+--- a/Doc/conf.py
++++ b/Doc/conf.py
+@@ -61,7 +61,7 @@
+ # By default, highlight as Python 3.
+ highlight_language = 'python3'
+ 
+-needs_sphinx = '1.1'
++#needs_sphinx = '1.1'
+ 
+ 
+ # Options for HTML output

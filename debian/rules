@@ -223,6 +223,7 @@ common_configure_args = \
 		--enable-loadable-sqlite-extensions \
 		--with-dbmliborder=bdb:gdbm \
 		--with-computed-gotos \
+		--without-ensurepip \
 		--with-system-expat \
 
 ifeq ($(DEB_HOST_ARCH), avr32)

@@ -1,6 +1,4 @@
-#! /bin/sh
-
-set -e
+#! /bin/sh -e
 
 if [ "$1" = configure ]; then
   if [ -d /usr/include/@PVER@ ] && [ ! -h /usr/include/@PVER@ ]; then

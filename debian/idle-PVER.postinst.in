@@ -1,10 +1,8 @@
-#! /bin/sh
+#! /bin/sh -e
 #
 # postinst script for the Debian idle-@PVER@ package.
 # Written 1998 by Gregor Hoffleit <flight@debian.org>.
 #
-
-set -e
 
 DIRLIST="/usr/lib/python@VER@/idlelib"
 

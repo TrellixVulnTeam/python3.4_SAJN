@@ -1,3 +1,0 @@
-# the packages in question are empty and transitional
-@PVER@ source: dbg-package-missing-depends @PVER@-tk-dbg
-@PVER@ source: dbg-package-missing-depends @PVER@-gdbm-dbg

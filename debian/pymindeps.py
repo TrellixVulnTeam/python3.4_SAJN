@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/python
 
 # Matthias Klose
 # Modified to only exclude module imports from a given module.
@@ -111,7 +111,7 @@ excluded_imports = {
     'collections': set(('cPickle', 'pickle', 'doctest')),
     'copy': set(('reprlib',)),
     'functools': set(('_dummy_thread',)),
-    'hashlib': set(('logging', '_hashlib')),
+    'hashlib': set(('logging',)),
     #'hashlib': set(('_hashlib', '_md5', '_sha', '_sha256','_sha512',)),
     'heapq': set(('doctest',)),
     'io': set(('_dummy_thread',)),
@@ -123,11 +123,11 @@ excluded_imports = {
     'platform': set(('plistlib', 'tempfile')),
     'reprlib': set(('_dummy_thread',)),
     #'socket': set(('_ssl',)),
-    '_sitebuiltins': set(('pydoc',)),
-    'subprocess': set(('dummy_threading',)),
-    'sysconfig': set(('pprint','_osx_support')),
-    'tempfile': set(('_dummy_thread', 'shutil')),
-    'threading': set(('_threading_local',)),
+    'shutil': set(('bz2', 'distutils', 'zipfile',)),
+    'subprocess': set(('threading',)),
+    'sysconfig': set(('_osx_support',)),
+    'tarfile': set(('bz2', 'gzip', 'lzma',)),
+    'tempfile': set(('_dummy_thread',)),
     }
 
 def main(argv):
@@ -160,10 +160,10 @@ def main(argv):
     path = addpath + path
 
     if debug > 1:
-        print(("version:", sys.version))
+        print("version:", sys.version)
         print("path:")
         for item in path:
-            print(("   ", repr(item)))
+            print("   ", repr(item))
 
     #exclude = ['__builtin__', 'sys', 'os']
     exclude = []

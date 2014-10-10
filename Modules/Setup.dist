@@ -91,7 +91,7 @@ SITEPATH=
 TESTPATH=
 
 # Path components for machine- or system-dependent modules and shared libraries
-MACHDEPPATH=:plat-$(MULTIARCH)
+MACHDEPPATH=:plat-$(MACHDEP)
 EXTRAMACHDEPPATH=
 
 COREPYTHONPATH=$(DESTPATH)$(SITEPATH)$(TESTPATH)$(MACHDEPPATH)$(EXTRAMACHDEPPATH)
@@ -175,7 +175,7 @@ _symtable symtablemodule.c
 #_weakref _weakref.c	# basic weak reference support
 #_testcapi _testcapimodule.c    # Python C API test module
 #_random _randommodule.c	# Random number generator
-#_elementtree _elementtree.c -lexpat	# elementtree accelerator
+#_elementtree -DUSE_PYEXPAT_CAPI _elementtree.c	# elementtree accelerator
 #_pickle _pickle.c	# pickle accelerator
 #_datetime _datetimemodule.c	# datetime accelerator
 #_bisect _bisectmodule.c	# Bisection algorithms
@@ -335,7 +335,7 @@ _symtable symtablemodule.c
 # Fred Drake's interface to the Python parser
 #parser parsermodule.c
 
-#_ctypes _ctypes/_ctypes.c _ctypes/callbacks.c _ctypes/callproc.c _ctypes/stgdict.c _ctypes/cfield.c _ctypes/malloc_closure.c -lffi
+#_ctypes _ctypes/_ctypes.c _ctypes/callbacks.c _ctypes/callproc.c _ctypes/stgdict.c _ctypes/cfield.c _ctypes/malloc_closure.c -Wl,-Bstatic -lffi -Wl,-Bdynamic
 
 # Lee Busby's SIGFPE modules.
 # The library to link fpectl with is platform specific.

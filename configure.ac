@@ -4098,7 +4098,7 @@ AC_MSG_RESULT($LDVERSION)
 
 dnl define LIBPL after ABIFLAGS and LDVERSION is defined.
 AC_SUBST(PY_ENABLE_SHARED)
-LIBPL="${prefix}/lib/python${VERSION}/config-${LDVERSION}-${MULTIARCH}"
+LIBPL="${prefix}/lib/python${VERSION}/config-${LDVERSION}"
 AC_SUBST(LIBPL)
 
 # Check whether right shifting a negative integer extends the sign bit

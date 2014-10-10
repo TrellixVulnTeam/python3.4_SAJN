@@ -1,17 +1,16 @@
-#! /usr/bin/python3
+#! /usr/bin/python
 
-from html.parser import HTMLParser
-import formatter
+import formatter, htmllib
 import os, sys, re
 
-class PyHTMLParser(HTMLParser):
+class PyHTMLParser(htmllib.HTMLParser):
     pages_to_include = set(('whatsnew/index.html', 'tutorial/index.html', 'using/index.html',
                             'reference/index.html', 'library/index.html', 'howto/index.html',
                             'extending/index.html', 'c-api/index.html', 'install/index.html',
-                            'distutils/index.html'))
+                            'distutils/index.html', 'documenting/index.html'))
 
     def __init__(self, formatter, basedir, fn, indent, parents=set()):
-        HTMLParser.__init__(self, formatter)
+        htmllib.HTMLParser.__init__(self, formatter)
         self.basedir = basedir
         self.dir, self.fn = os.path.split(fn)
         self.data = ''
@@ -28,23 +27,11 @@ class PyHTMLParser(HTMLParser):
         text = self.link['text']
         indent = self.indent + self.sub_indent
         if self.last_indent == indent:
-            print('%s</sub>' % ('  ' * self.last_indent))
+            print '%s</sub>' % ('  ' * self.last_indent)
             self.sub_count -= 1
-        print('%s<sub link="%s" name="%s">' % ('  ' * indent, new_href, text))
+        print '%s<sub link="%s" name="%s">' % ('  ' * indent, new_href, text)
         self.sub_count += 1
         self.last_indent = self.indent + self.sub_indent
-
-    def handle_starttag(self, tag, attrs):
-        if tag == 'a':
-            self.start_a(attrs)
-        elif tag == 'li':
-            self.start_li(attrs)
-
-    def handle_endtag(self, tag):
-        if tag == 'a':
-            self.end_a()
-        elif tag == 'li':
-            self.end_li()
 
     def start_li(self, attrs):
         self.sub_indent += 1
@@ -53,7 +40,7 @@ class PyHTMLParser(HTMLParser):
     def end_li(self):
         indent = self.indent + self.sub_indent
         if self.sub_count > 0:
-            print('%s</sub>' % ('  ' * self.last_indent))
+            print '%s</sub>' % ('  ' * self.last_indent)
             self.sub_count -= 1
             self.last_indent -= 1
         self.sub_indent -= 1
@@ -85,7 +72,7 @@ class PyHTMLParser(HTMLParser):
                     'license.html', 'copyright.html'):
             return
 
-        if 'class' in self.link:
+        if self.link.has_key('class'):
             if self.link['class'] in ('biglink'):
                 process = True
             if self.link['class'] in ('reference external'):
@@ -100,7 +87,7 @@ class PyHTMLParser(HTMLParser):
 
     def finish(self):
         if self.sub_count > 0:
-            print('%s</sub>' % ('  ' * self.last_indent))
+            print '%s</sub>' % ('  ' * self.last_indent)
 
     def handle_data(self, data):
         self.data += data
@@ -112,16 +99,16 @@ class PyHTMLParser(HTMLParser):
         parser = PyHTMLParser(formatter.NullFormatter(),
                               self.basedir, href, self.indent + 1,
                               self.parents)
-        text = open(self.basedir + '/' + href, encoding='latin_1').read()
+        text = file(self.basedir + '/' + href).read()
         parser.feed(text)
         parser.finish()
         parser.close()
         if parent in self.parents:
             self.parents.remove(parent)
 
-class PyIdxHTMLParser(HTMLParser):
+class PyIdxHTMLParser(htmllib.HTMLParser):
     def __init__(self, formatter, basedir, fn, indent):
-        HTMLParser.__init__(self, formatter)
+        htmllib.HTMLParser.__init__(self, formatter)
         self.basedir = basedir
         self.dir, self.fn = os.path.split(fn)
         self.data = ''
@@ -149,35 +136,7 @@ class PyIdxHTMLParser(HTMLParser):
             # Save it in case we need it again
             self.last_text = re.sub(' \([\w\-\.\s]+\)', '', text)
         indent = self.indent
-        print('%s<function link="%s" name="%s"/>' % ('  ' * indent, new_href, text))
-
-    def handle_starttag(self, tag, attrs):
-        if tag == 'a':
-            self.start_a(attrs)
-        elif tag == 'dl':
-            self.start_dl(attrs)
-        elif tag == 'dt':
-            self.start_dt(attrs)
-        elif tag == 'h2':
-            self.start_h2(attrs)
-        elif tag == 'td':
-            self.start_td(attrs)
-        elif tag == 'table':
-            self.start_table(attrs)
-
-    def handle_endtag(self, tag):
-        if tag == 'a':
-            self.end_a()
-        elif tag == 'dl':
-            self.end_dl()
-        elif tag == 'dt':
-            self.end_dt()
-        elif tag == 'h2':
-            self.end_h2()
-        elif tag == 'td':
-            self.end_td()
-        elif tag == 'table':
-            self.end_table()
+        print '%s<function link="%s" name="%s"/>' % ('  ' * indent, new_href, text)
 
     def start_dl(self, attrs):
         if self.last_text:
@@ -206,15 +165,9 @@ class PyIdxHTMLParser(HTMLParser):
                 if v == '_':
                     self.active = True
 
-    def end_h2(self):
-        pass
-
     def start_td(self, attrs):
         self.indented = False
         self.last_text = ''
-
-    def end_td(self):
-        pass
 
     def start_table(self, attrs):
         pass
@@ -231,8 +184,7 @@ class PyIdxHTMLParser(HTMLParser):
         self.data = ''
         
     def end_a(self):
-        text = self.data.replace('\t', '').replace('\n', ' ')
-        text = text.replace("Whats ", "What's ")
+        text = self.data.replace('\t', '').replace('\n', ' ').replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
         self.link['text'] = text
         # handle a tag without href attribute
         try:
@@ -244,30 +196,27 @@ class PyIdxHTMLParser(HTMLParser):
     def handle_data(self, data):
         self.data += data
 
-    def handle_entityref(self, name):
-        self.data += '&%s;' % name
-
 def main():
     base = sys.argv[1]
     fn = sys.argv[2]
     version = sys.argv[3]
 
     parser = PyHTMLParser(formatter.NullFormatter(), base, fn, indent=0)
-    print('<?xml version="1.0" encoding="iso-8859-1"?>')
-    print('<book title="Python %s Documentation" name="Python %s" version="%s" link="index.html">' % (version, version, version))
-    print('<chapters>')
+    print '<?xml version="1.0" encoding="iso-8859-1"?>'
+    print '<book title="Python %s Documentation" name="Python" version="%s" link="index.html">' % (version, version)
+    print '<chapters>'
     parser.parse_file(fn)
-    print('</chapters>')
+    print '</chapters>'
 
-    print('<functions>')
+    print '<functions>'
 
     fn = 'genindex-all.html'
     parser = PyIdxHTMLParser(formatter.NullFormatter(), base, fn, indent=1)
-    text = open(base + '/' + fn, encoding='latin_1').read()
+    text = file(base + '/' + fn).read()
     parser.feed(text)
     parser.close()
 
-    print('</functions>')
-    print('</book>')
+    print '</functions>'
+    print '</book>'
 
 main()

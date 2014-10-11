@@ -8,7 +8,7 @@
  import sysconfig
  
  from distutils import log
-@@ -1934,7 +1935,10 @@
+@@ -1942,7 +1943,10 @@
              # in /usr/include/ffi
              inc_dirs.append('/usr/include/ffi')
  

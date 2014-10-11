@@ -3,7 +3,7 @@
 
 --- a/Modules/socketmodule.c
 +++ b/Modules/socketmodule.c
-@@ -6129,9 +6129,11 @@
+@@ -6136,9 +6136,11 @@
  #ifdef  SO_OOBINLINE
      PyModule_AddIntMacro(m, SO_OOBINLINE);
  #endif

@@ -1061,6 +1061,7 @@
  _PyCodecInfo_GetIncrementalEncoder@Base @VER@
  _PyCodec_DecodeText@Base @VER@
  _PyCodec_EncodeText@Base @VER@
+ _PyCodec_Forget@Base 3.4.2
  _PyCodec_Lookup@Base @VER@
  _PyCodec_LookupTextEncoding@Base @VER@
  _PyComplex_FormatAdvancedWriter@Base @VER@
@@ -1254,6 +1255,7 @@
  _PyState_ClearModules@Base @VER@
  _PyStructSequence_Init@Base @VER@
  _PySys_GetObjectId@Base @VER@
+ _PySys_GetSizeOf@Base 3.4.2
  _PySys_ImplCacheTag@Base @VER@
  _PySys_ImplName@Base @VER@
  _PySys_Init@Base @VER@

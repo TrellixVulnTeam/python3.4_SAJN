@@ -1,3 +1,9 @@
+python3.4 (3.4.2-1+lucid1) lucid; urgency=medium
+
+  * Imported new upstream release Python 3.4.2.
+
+ -- Felix Krull <f_krull@gmx.de>  Sat, 11 Oct 2014 19:03:12 +0200
+
 python3.4 (3.4.1-1.1+lucid1) lucid; urgency=medium
 
   * Imported from precise package.

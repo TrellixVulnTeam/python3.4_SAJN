@@ -1504,8 +1504,6 @@
  _Py_findlabel@Base @VER@
  _Py_fopen@Base @VER@
  _Py_fopen_obj@Base @VER@
- (arch=i386 lpia m68k)_Py_force_double@Base @VER@
- (arch=amd64 i386 lpia)_Py_get_387controlword@Base @VER@
  _Py_get_inheritable@Base @VER@
  _Py_hashtable_clear@Base @VER@
  _Py_hashtable_compare_direct@Base @VER@
@@ -1545,7 +1543,6 @@
  _Py_parse_inf_or_nan@Base @VER@
  _Py_pgen@Base @VER@
  _Py_samebitset@Base @VER@
- (arch=amd64 i386 lpia)_Py_set_387controlword@Base @VER@
  _Py_set_inheritable@Base @VER@
  _Py_stat@Base @VER@
  _Py_swapcase__doc__@Base @VER@

@@ -1964,10 +1964,6 @@ class PyBuildExt(build_ext):
             ext.libraries.append(ffi_lib)
             self.use_system_libffi = True
 
-        if not self.use_system_libffi:
-            print("Error: not using system libffi", file=sys.stderr)
-            sys.exit(1)
-
     def _decimal_ext(self):
         extra_compile_args = []
         undef_macros = []

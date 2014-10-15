@@ -33,3 +33,5 @@ installed-testsuite.diff
 test-no-random-order.diff
 multiarch-extname.diff
 tempfile-minimal.diff
+deadsnakes-assert-use-system-ffi.diff
+distutils-packaging-link.diff

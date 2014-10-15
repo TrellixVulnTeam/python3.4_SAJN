@@ -381,7 +381,7 @@ def find(domain, localedir=None, languages=None, all=False):
         mofile_lp = os.path.join("/usr/share/locale-langpack", lang,
                                'LC_MESSAGES', '%s.mo' % domain)
 
-	# first look into the standard locale dir, then into the 
+	# first look into the standard locale dir, then into the
 	# langpack locale dir
 
 	# standard mo file
@@ -390,9 +390,9 @@ def find(domain, localedir=None, languages=None, all=False):
                 result.append(mofile)
             else:
                 return mofile
-        
+
 	# langpack mofile -> use it
-        if os.path.exists(mofile_lp): 
+        if os.path.exists(mofile_lp):
             if all:
                 result.append(mofile_lp)
             else:

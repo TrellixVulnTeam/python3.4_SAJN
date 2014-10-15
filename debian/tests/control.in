@@ -11,8 +11,9 @@ Depends: @PVER@
 Test-Command: @PVER@ -c "import test.support"
 Depends: @PVER@
 
-Tests: regr17-apt_pkg-import
-Depends: @PVER@-minimal, python3-apport
+# Not on precise
+#Tests: regr17-apt_pkg-import
+#Depends: @PVER@-minimal, python3-apport
 
 Tests: check-various-modules
 Depends: @PVER@, lib@PVER@-gdbm, lib@PVER@-tk

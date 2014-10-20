@@ -1,3 +1,9 @@
+python3.4 (3.4.2-2+precise1) UNRELEASED; urgency=medium
+
+  * Add missing shebang in turtledemo/two_canvases.py.
+
+ -- Felix Krull <f_krull@gmx.de>  Mon, 20 Oct 2014 22:01:24 +0200
+
 python3.4 (3.4.2-1+precise1) precise; urgency=medium
 
   * Imported new upstream release Python 3.4.2.

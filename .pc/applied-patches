@@ -35,3 +35,4 @@ multiarch-extname.diff
 tempfile-minimal.diff
 deadsnakes-assert-use-system-ffi.diff
 distutils-packaging-link.diff
+turtledemo-add-shebang.diff

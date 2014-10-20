@@ -20,3 +20,6 @@ Depends: libc-bin, lib@PVER@-stdlib, lib@PVER@-dbg
 
 Tests: check-various-modules
 Depends: @PVER@, lib@PVER@-gdbm, lib@PVER@-tk
+
+Tests: check-ndbm
+Depends: libc-bin, @PVER@

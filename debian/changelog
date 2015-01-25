@@ -1,8 +1,10 @@
-python3.4 (3.4.2-2+precise1) UNRELEASED; urgency=medium
+python3.4 (3.4.2-2+precise1) precise; urgency=medium
 
   * Add missing shebang in turtledemo/two_canvases.py.
+  * Fix install layout with venv.
+  * Fix venv site-packages path when running disabled venv.
 
- -- Felix Krull <f_krull@gmx.de>  Mon, 20 Oct 2014 22:01:24 +0200
+ -- Felix Krull <f_krull@gmx.de>  Sun, 25 Jan 2015 18:30:49 +0100
 
 python3.4 (3.4.2-1+precise1) precise; urgency=medium
 

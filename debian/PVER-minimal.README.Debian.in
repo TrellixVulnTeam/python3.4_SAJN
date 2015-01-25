@@ -27,7 +27,7 @@ are:
   _io			builtin
   _locale		extension
   _md5			extension
-  _opcode		extension
+  _opcode		extensionx
   _operator		extension
   _pickle		extension
   _posixsubprocess	extension

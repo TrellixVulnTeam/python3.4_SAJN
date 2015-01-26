@@ -4,7 +4,7 @@ python3.4 (3.4.2-2+precise1) precise; urgency=medium
   * Fix install layout with venv.
   * Fix venv site-packages path when running disabled venv.
 
- -- Felix Krull <f_krull@gmx.de>  Sun, 25 Jan 2015 18:30:49 +0100
+ -- Felix Krull <f_krull@gmx.de>  Mon, 26 Jan 2015 16:36:32 +0100
 
 python3.4 (3.4.2-1+precise1) precise; urgency=medium
 

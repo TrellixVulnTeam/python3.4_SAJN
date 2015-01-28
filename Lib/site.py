@@ -317,7 +317,7 @@ def getsitepackages(prefixes=None):
         seen.add(prefix)
 
         if os.sep == '/':
-            if 'VIRTUAL_ENV' in os.environ or sys.base_prefix != sys.prefix:
+            if 'VIRTUAL_ENV' in os.environ or 'real_prefix' in sys.__dict__ or sys.base_prefix != sys.prefix:
                 sitepackages.append(os.path.join(prefix, "lib",
                                                  "python" + sys.version[:3],
                                                  "site-packages"))

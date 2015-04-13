@@ -1521,12 +1521,15 @@ Sub-commands
    * parser_class - class which will be used to create sub-parser instances, by
      default the class of the current parser (e.g. ArgumentParser)
 
-   * dest - name of the attribute under which sub-command name will be
+   * action_ - the basic type of action to be taken when this argument is
+     encountered at the command line
+
+   * dest_ - name of the attribute under which sub-command name will be
      stored; by default None and no value is stored
 
-   * help - help for sub-parser group in help output, by default None
+   * help_ - help for sub-parser group in help output, by default None
 
-   * metavar - string presenting available sub-commands in help; by default it
+   * metavar_ - string presenting available sub-commands in help; by default it
      is None and presents sub-commands in form {cmd1, cmd2, ..}
 
    Some example usage::
@@ -1948,6 +1951,16 @@ transparently, particularly with the changes required to support the new
 ``nargs=`` specifiers and better usage messages.  When most everything in
 :mod:`optparse` had either been copy-pasted over or monkey-patched, it no
 longer seemed practical to try to maintain the backwards compatibility.
+
+The :mod:`argparse` module improves on the standard library :mod:`optparse`
+module in a number of ways including:
+
+* Handling positional arguments.
+* Supporting sub-commands.
+* Allowing alternative option prefixes like ``+`` and ``/``.
+* Handling zero-or-more and one-or-more style arguments.
+* Producing more informative usage messages.
+* Providing a much simpler interface for custom ``type`` and ``action``.
 
 A partial upgrade path from :mod:`optparse` to :mod:`argparse`:
 

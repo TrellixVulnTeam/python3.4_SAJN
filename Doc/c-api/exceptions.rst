@@ -64,7 +64,7 @@ in various ways.  There is a separate error indicator for each thread.
       Do not compare the return value to a specific exception; use
       :c:func:`PyErr_ExceptionMatches` instead, shown below.  (The comparison could
       easily fail since the exception may be an instance instead of a class, in the
-      case of a class exception, or it may the a subclass of the expected exception.)
+      case of a class exception, or it may be a subclass of the expected exception.)
 
 
 .. c:function:: int PyErr_ExceptionMatches(PyObject *exc)
@@ -346,7 +346,7 @@ in various ways.  There is a separate error indicator for each thread.
    use.
 
 
-.. c:function:: int PyErr_WarnEx(PyObject *category, char *message, int stack_level)
+.. c:function:: int PyErr_WarnEx(PyObject *category, const char *message, Py_ssize_t stack_level)
 
    Issue a warning message.  The *category* argument is a warning category (see
    below) or *NULL*; the *message* argument is an UTF-8 encoded string.  *stack_level* is a

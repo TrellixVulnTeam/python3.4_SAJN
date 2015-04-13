@@ -1080,6 +1080,7 @@
  _PyDict_NewPresized@Base @VER@
  _PyDict_Next@Base @VER@
  _PyErr_BadInternalCall@Base @VER@
+ _PyErr_ChainExceptions@Base 3.4.3
  _PyErr_SetKeyError@Base @VER@
  _PyErr_TrySetFromCause@Base @VER@
  _PyDict_SetItemId@Base @VER@
@@ -1274,6 +1275,7 @@
  _PyTime_gettimeofday_info@Base @VER@
  _PyTraceMalloc_Init@Base @VER@
  _PyTraceMalloc_Fini@Base @VER@
+ _PyTraceback_Add@Base 3.4.3
  _PyTrash_delete_later@Base @VER@
  _PyTrash_delete_nesting@Base @VER@
  _PyTrash_deposit_object@Base @VER@

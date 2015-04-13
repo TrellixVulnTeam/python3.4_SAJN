@@ -17,7 +17,7 @@
  #endif
 --- a/Modules/posixmodule.c
 +++ b/Modules/posixmodule.c
-@@ -11724,12 +11724,14 @@
+@@ -11752,12 +11752,14 @@
  #ifdef O_LARGEFILE
      if (PyModule_AddIntMacro(m, O_LARGEFILE)) return -1;
  #endif

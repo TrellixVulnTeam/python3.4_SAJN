@@ -9,7 +9,7 @@
  LDCXXSHARED=	@LDCXXSHARED@
  DESTSHARED=	$(BINLIBDEST)/lib-dynload
  
-@@ -538,7 +538,7 @@
+@@ -539,7 +539,7 @@
  
  # Build the interpreter
  $(BUILDPYTHON):	Modules/python.o $(LIBRARY) $(LDLIBRARY) $(PY3LIBRARY)

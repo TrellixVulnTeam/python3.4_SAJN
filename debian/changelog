@@ -1,8 +1,8 @@
-python3.4 (3.4.3-1+precise1) UNRELEASED; urgency=medium
+python3.4 (3.4.3-1+precise1) precise; urgency=medium
 
   * Imported new upstream release Python 3.4.3.
 
- -- Felix Krull <f_krull@gmx.de>  Mon, 13 Apr 2015 14:10:15 +0200
+ -- Felix Krull <f_krull@gmx.de>  Mon, 13 Apr 2015 19:53:11 +0200
 
 python3.4 (3.4.2-3+precise1) precise; urgency=medium
 

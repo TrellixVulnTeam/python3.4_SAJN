@@ -16,27 +16,41 @@ to this, the :mod:`multiprocessing` module allows the programmer to fully
 leverage multiple processors on a given machine.  It runs on both Unix and
 Windows.
 
-The :mod:`multiprocessing` module also introduces APIs which do not have
-analogs in the :mod:`threading` module.  A prime example of this is the
-:class:`~multiprocessing.pool.Pool` object which offers a convenient means of
-parallelizing the execution of a function across multiple input values,
-distributing the input data across processes (data parallelism).  The following
-example demonstrates the common practice of defining such functions in a module
-so that child processes can successfully import that module.  This basic example
-of data parallelism using :class:`~multiprocessing.pool.Pool`, ::
+.. note::
 
-   from multiprocessing import Pool
+    Some of this package's functionality requires a functioning shared semaphore
+    implementation on the host operating system. Without one, the
+    :mod:`multiprocessing.synchronize` module will be disabled, and attempts to
+    import it will result in an :exc:`ImportError`. See
+    :issue:`3770` for additional information.
 
-   def f(x):
-       return x*x
+.. note::
 
-   if __name__ == '__main__':
-       with Pool(5) as p:
-           print(p.map(f, [1, 2, 3]))
+    Functionality within this package requires that the ``__main__`` module be
+    importable by the children. This is covered in :ref:`multiprocessing-programming`
+    however it is worth pointing out here. This means that some examples, such
+    as the :class:`multiprocessing.pool.Pool` examples will not work in the
+    interactive interpreter. For example::
 
-will print to standard output ::
+        >>> from multiprocessing import Pool
+        >>> p = Pool(5)
+        >>> def f(x):
+        ...     return x*x
+        ...
+        >>> p.map(f, [1,2,3])
+        Process PoolWorker-1:
+        Process PoolWorker-2:
+        Process PoolWorker-3:
+        Traceback (most recent call last):
+        Traceback (most recent call last):
+        Traceback (most recent call last):
+        AttributeError: 'module' object has no attribute 'f'
+        AttributeError: 'module' object has no attribute 'f'
+        AttributeError: 'module' object has no attribute 'f'
 
-   [1, 4, 9]
+    (If you try this it will actually output three full tracebacks
+    interleaved in a semi-random fashion, and then you may have to
+    stop the master process somehow.)
 
 
 The :class:`Process` class
@@ -262,14 +276,6 @@ that only one process prints to standard output at a time::
 Without using the lock output from the different processes is liable to get all
 mixed up.
 
-.. note::
-
-   Some of this package's functionality requires a functioning shared semaphore
-   implementation on the host operating system. Without one, the
-   :mod:`multiprocessing.synchronize` module will be disabled, and attempts to
-   import it will result in an :exc:`ImportError`. See
-   :issue:`3770` for additional information.
-
 
 Sharing state between processes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -399,34 +405,6 @@ For example::
 
 Note that the methods of a pool should only ever be used by the
 process which created it.
-
-.. note::
-
-   Functionality within this package requires that the ``__main__`` module be
-   importable by the children. This is covered in :ref:`multiprocessing-programming`
-   however it is worth pointing out here. This means that some examples, such
-   as the :class:`multiprocessing.pool.Pool` examples will not work in the
-   interactive interpreter. For example::
-
-      >>> from multiprocessing import Pool
-      >>> p = Pool(5)
-      >>> def f(x):
-      ...     return x*x
-      ...
-      >>> p.map(f, [1,2,3])
-      Process PoolWorker-1:
-      Process PoolWorker-2:
-      Process PoolWorker-3:
-      Traceback (most recent call last):
-      Traceback (most recent call last):
-      Traceback (most recent call last):
-      AttributeError: 'module' object has no attribute 'f'
-      AttributeError: 'module' object has no attribute 'f'
-      AttributeError: 'module' object has no attribute 'f'
-
-   (If you try this it will actually output three full tracebacks
-   interleaved in a semi-random fashion, and then you may have to
-   stop the master process somehow.)
 
 
 Reference
@@ -864,7 +842,7 @@ Miscellaneous
 
    Return list of all live children of the current process.
 
-   Calling this has the side effect of "joining" any processes which have
+   Calling this has the side affect of "joining" any processes which have
    already finished.
 
 .. function:: cpu_count()
@@ -1984,18 +1962,18 @@ with the :class:`Pool` class.
 
    .. method:: starmap(func, iterable[, chunksize])
 
-      Like :meth:`map` except that the elements of the *iterable* are expected
+      Like :meth:`map` except that the elements of the `iterable` are expected
       to be iterables that are unpacked as arguments.
 
-      Hence an *iterable* of ``[(1,2), (3, 4)]`` results in ``[func(1,2),
-      func(3,4)]``.
+      Hence an `iterable` of `[(1,2), (3, 4)]` results in `[func(1,2),
+      func(3,4)]`.
 
       .. versionadded:: 3.3
 
    .. method:: starmap_async(func, iterable[, chunksize[, callback[, error_back]]])
 
       A combination of :meth:`starmap` and :meth:`map_async` that iterates over
-      *iterable* of iterables and calls *func* with the iterables unpacked.
+      `iterable` of iterables and calls `func` with the iterables unpacked.
       Returns a result object.
 
       .. versionadded:: 3.3
@@ -2486,7 +2464,7 @@ Joining processes that use queues
     items which have been put on the queue will eventually be removed before the
     process is joined.  Otherwise you cannot be sure that processes which have
     put items on the queue will terminate.  Remember also that non-daemonic
-    processes will be joined automatically.
+    processes will be automatically be joined.
 
     An example which will deadlock is the following::
 
@@ -2502,7 +2480,7 @@ Joining processes that use queues
             p.join()                    # this deadlocks
             obj = queue.get()
 
-    A fix here would be to swap the last two lines (or simply remove the
+    A fix here would be to swap the last two lines round (or simply remove the
     ``p.join()`` line).
 
 Explicitly pass resources to child processes

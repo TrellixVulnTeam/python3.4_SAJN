@@ -406,18 +406,12 @@ functions.
 
       Read the `Security Considerations`_ section before using ``shell=True``.
 
-   *bufsize* will be supplied as the corresponding argument to the
-   :func:`open` function when creating the stdin/stdout/stderr pipe
-   file objects:
-
-   - :const:`0` means unbuffered (read and write are one
-     system call and can return short)
-   - :const:`1` means line buffered
-     (only usable if ``universal_newlines=True`` i.e., in a text mode)
-   - any other positive value means use a buffer of approximately that
-     size
-   - negative bufsize (the default) means the system default of
-     io.DEFAULT_BUFFER_SIZE will be used.
+   *bufsize* will be supplied as the corresponding argument to the :func:`open`
+   function when creating the stdin/stdout/stderr pipe file objects: :const:`0`
+   means unbuffered (read and write are one system call and can return short),
+   :const:`1` means line buffered, any other positive value means use a buffer
+   of approximately that size.  A negative bufsize (the default) means the
+   system default of io.DEFAULT_BUFFER_SIZE will be used.
 
    .. versionchanged:: 3.3.1
       *bufsize* now defaults to -1 to enable buffering by default to match the
@@ -634,7 +628,7 @@ Instances of the :class:`Popen` class have the following methods:
    ``None``, if no data should be sent to the child.  The type of *input*
    must be bytes or, if *universal_newlines* was ``True``, a string.
 
-   :meth:`communicate` returns a tuple ``(stdout_data, stderr_data)``.
+   :meth:`communicate` returns a tuple ``(stdoutdata, stderrdata)``.
 
    Note that if you want to send data to the process's stdin, you need to create
    the Popen object with ``stdin=PIPE``.  Similarly, to get anything other than

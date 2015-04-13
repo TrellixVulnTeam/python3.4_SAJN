@@ -19,8 +19,7 @@ higher-level functions in :ref:`shutil <archiving-operations>`.
 
 Some facts and figures:
 
-* reads and writes :mod:`gzip`, :mod:`bz2` and :mod:`lzma` compressed archives
-  if the respective modules are available.
+* reads and writes :mod:`gzip`, :mod:`bz2` and :mod:`lzma` compressed archives.
 
 * read/write support for the POSIX.1-1988 (ustar) format.
 
@@ -177,13 +176,6 @@ The :mod:`tarfile` module defines the following exceptions:
    Is raised by :meth:`TarInfo.frombuf` if the buffer it gets is invalid.
 
 
-The following constants are available at the module level:
-
-.. data:: ENCODING
-
-   The default character encoding: ``'utf-8'`` on Windows, the value returned by
-   :func:`sys.getfilesystemencoding` otherwise.
-
 
 Each of the following constants defines a tar archive format that the
 :mod:`tarfile` module is able to create. See section :ref:`tar-formats` for
@@ -210,14 +202,19 @@ details.
    The default format for creating archives. This is currently :const:`GNU_FORMAT`.
 
 
+The following variables are available on module level:
+
+
+.. data:: ENCODING
+
+   The default character encoding: ``'utf-8'`` on Windows,
+   :func:`sys.getfilesystemencoding` otherwise.
+
+
 .. seealso::
 
    Module :mod:`zipfile`
       Documentation of the :mod:`zipfile` standard module.
-
-   :ref:`archiving-operations`
-      Documentation of the higher-level archiving facilities provided by the
-      standard :mod:`shutil` module.
 
    `GNU tar manual, Basic Tar Format <http://www.gnu.org/software/tar/manual/html_node/Standard.html>`_
       Documentation for tar archive files, including GNU tar extensions.
@@ -794,7 +791,7 @@ metadata must be either decoded or encoded. If *encoding* is not set
 appropriately, this conversion may fail.
 
 The *errors* argument defines how characters are treated that cannot be
-converted. Possible values are listed in section :ref:`error-handlers`.
+converted. Possible values are listed in section :ref:`codec-base-classes`.
 The default scheme is ``'surrogateescape'`` which Python also uses for its
 file system calls, see :ref:`os-filenames`.
 

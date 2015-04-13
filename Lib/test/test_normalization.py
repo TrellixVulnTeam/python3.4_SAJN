@@ -7,7 +7,7 @@ import os
 from unicodedata import normalize, unidata_version
 
 TESTDATAFILE = "NormalizationTest.txt"
-TESTDATAURL = "http://www.pythontest.net/unicode/" + unidata_version + "/" + TESTDATAFILE
+TESTDATAURL = "http://www.unicode.org/Public/" + unidata_version + "/ucd/" + TESTDATAFILE
 
 def check_version(testfile):
     hdr = testfile.readline()

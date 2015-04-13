@@ -1139,8 +1139,6 @@ class RecodingTest(unittest.TestCase):
         # Python used to crash on this at exit because of a refcount
         # bug in _codecsmodule.c
 
-        self.assertTrue(f.closed)
-
 # From RFC 3492
 punycode_testcases = [
     # A Arabic (Egyptian):
@@ -1593,16 +1591,6 @@ class IDNACodecTest(unittest.TestCase):
         self.assertEqual(encoder.encode("ample.org."), b"xn--xample-9ta.org.")
         self.assertEqual(encoder.encode("", True), b"")
 
-    def test_errors(self):
-        """Only supports "strict" error handler"""
-        "python.org".encode("idna", "strict")
-        b"python.org".decode("idna", "strict")
-        for errors in ("ignore", "replace", "backslashreplace",
-                "surrogateescape"):
-            self.assertRaises(Exception, "python.org".encode, "idna", errors)
-            self.assertRaises(Exception,
-                b"python.org".decode, "idna", errors)
-
 class CodecsModuleTest(unittest.TestCase):
 
     def test_decode(self):
@@ -1657,46 +1645,6 @@ class CodecsModuleTest(unittest.TestCase):
             self.skipTest('test needs Turkish locale')
         c = codecs.lookup('ASCII')
         self.assertEqual(c.name, 'ascii')
-
-    def test_all(self):
-        api = (
-            "encode", "decode",
-            "register", "CodecInfo", "Codec", "IncrementalEncoder",
-            "IncrementalDecoder", "StreamReader", "StreamWriter", "lookup",
-            "getencoder", "getdecoder", "getincrementalencoder",
-            "getincrementaldecoder", "getreader", "getwriter",
-            "register_error", "lookup_error",
-            "strict_errors", "replace_errors", "ignore_errors",
-            "xmlcharrefreplace_errors", "backslashreplace_errors",
-            "open", "EncodedFile",
-            "iterencode", "iterdecode",
-            "BOM", "BOM_BE", "BOM_LE",
-            "BOM_UTF8", "BOM_UTF16", "BOM_UTF16_BE", "BOM_UTF16_LE",
-            "BOM_UTF32", "BOM_UTF32_BE", "BOM_UTF32_LE",
-            "BOM32_BE", "BOM32_LE", "BOM64_BE", "BOM64_LE",  # Undocumented
-            "StreamReaderWriter", "StreamRecoder",
-        )
-        self.assertCountEqual(api, codecs.__all__)
-        for api in codecs.__all__:
-            getattr(codecs, api)
-
-    def test_open(self):
-        self.addCleanup(support.unlink, support.TESTFN)
-        for mode in ('w', 'r', 'r+', 'w+', 'a', 'a+'):
-            with self.subTest(mode), \
-                    codecs.open(support.TESTFN, mode, 'ascii') as file:
-                self.assertIsInstance(file, codecs.StreamReaderWriter)
-
-    def test_undefined(self):
-        self.assertRaises(UnicodeError, codecs.encode, 'abc', 'undefined')
-        self.assertRaises(UnicodeError, codecs.decode, b'abc', 'undefined')
-        self.assertRaises(UnicodeError, codecs.encode, '', 'undefined')
-        self.assertRaises(UnicodeError, codecs.decode, b'', 'undefined')
-        for errors in ('strict', 'ignore', 'replace', 'backslashreplace'):
-            self.assertRaises(UnicodeError,
-                codecs.encode, 'abc', 'undefined', errors)
-            self.assertRaises(UnicodeError,
-                codecs.decode, b'abc', 'undefined', errors)
 
 class StreamReaderTest(unittest.TestCase):
 
@@ -1831,9 +1779,12 @@ if hasattr(codecs, "mbcs_encode"):
 #    "undefined"
 
 # The following encodings don't work in stateful mode
-broken_unicode_with_stateful = [
+broken_unicode_with_streams = [
     "punycode",
     "unicode_internal"
+]
+broken_incremental_coders = broken_unicode_with_streams + [
+    "idna",
 ]
 
 class BasicUnicodeTest(unittest.TestCase, MixInCheckStateHandling):
@@ -1854,7 +1805,7 @@ class BasicUnicodeTest(unittest.TestCase, MixInCheckStateHandling):
                 (chars, size) = codecs.getdecoder(encoding)(b)
                 self.assertEqual(chars, s, "encoding=%r" % encoding)
 
-            if encoding not in broken_unicode_with_stateful:
+            if encoding not in broken_unicode_with_streams:
                 # check stream reader/writer
                 q = Queue(b"")
                 writer = codecs.getwriter(encoding)(q)
@@ -1872,7 +1823,7 @@ class BasicUnicodeTest(unittest.TestCase, MixInCheckStateHandling):
                     decodedresult += reader.read()
                 self.assertEqual(decodedresult, s, "encoding=%r" % encoding)
 
-            if encoding not in broken_unicode_with_stateful:
+            if encoding not in broken_incremental_coders:
                 # check incremental decoder/encoder and iterencode()/iterdecode()
                 try:
                     encoder = codecs.getincrementalencoder(encoding)()
@@ -1921,7 +1872,7 @@ class BasicUnicodeTest(unittest.TestCase, MixInCheckStateHandling):
         from _testcapi import codec_incrementalencoder, codec_incrementaldecoder
         s = "abc123"  # all codecs should be able to encode these
         for encoding in all_unicode_encodings:
-            if encoding not in broken_unicode_with_stateful:
+            if encoding not in broken_incremental_coders:
                 # check incremental decoder/encoder (fetched via the C API)
                 try:
                     cencoder = codec_incrementalencoder(encoding)
@@ -1961,7 +1912,7 @@ class BasicUnicodeTest(unittest.TestCase, MixInCheckStateHandling):
         for encoding in all_unicode_encodings:
             if encoding == "idna": # FIXME: See SF bug #1163178
                 continue
-            if encoding in broken_unicode_with_stateful:
+            if encoding in broken_unicode_with_streams:
                 continue
             reader = codecs.getreader(encoding)(io.BytesIO(s.encode(encoding)))
             for t in range(5):
@@ -1994,7 +1945,7 @@ class BasicUnicodeTest(unittest.TestCase, MixInCheckStateHandling):
         # Check that getstate() and setstate() handle the state properly
         u = "abc123"
         for encoding in all_unicode_encodings:
-            if encoding not in broken_unicode_with_stateful:
+            if encoding not in broken_incremental_coders:
                 self.check_state_handling_decode(encoding, u, u.encode(encoding))
                 self.check_state_handling_encode(encoding, u, u.encode(encoding))
 
@@ -2198,7 +2149,6 @@ class WithStmtTest(unittest.TestCase):
         f = io.BytesIO(b"\xc3\xbc")
         with codecs.EncodedFile(f, "latin-1", "utf-8") as ef:
             self.assertEqual(ef.read(), b"\xfc")
-        self.assertTrue(f.closed)
 
     def test_streamreaderwriter(self):
         f = io.BytesIO(b"\xc3\xbc")
@@ -2612,10 +2562,6 @@ class TransformCodecTest(unittest.TestCase):
                 with self.subTest(alias=alias):
                     info = codecs.lookup(alias)
                     self.assertEqual(info.name, expected_name)
-
-    def test_uu_invalid(self):
-        # Missing "begin" line
-        self.assertRaises(ValueError, codecs.decode, b"", "uu-codec")
 
 
 # The codec system tries to wrap exceptions in order to ensure the error

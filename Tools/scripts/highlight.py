@@ -3,12 +3,11 @@
 
 __author__ = 'Raymond Hettinger'
 
-import builtins
-import functools
-import html as html_module
-import keyword
-import re
-import tokenize
+import keyword, tokenize, cgi, re, functools
+try:
+    import builtins
+except ImportError:
+    import __builtin__ as builtins
 
 #### Analyze Python Source #################################
 
@@ -102,7 +101,7 @@ def html_highlight(classified_text,opener='<pre class="python">\n', closer='</pr
     for kind, text in classified_text:
         if kind:
             result.append('<span class="%s">' % kind)
-        result.append(html_module.escape(text))
+        result.append(cgi.escape(text))
         if kind:
             result.append('</span>')
     result.append(closer)
@@ -141,7 +140,7 @@ def build_html_page(classified_text, title='python',
     'Create a complete HTML page with colorized source code'
     css_str = '\n'.join(['%s %s' % item for item in css.items()])
     result = html_highlight(classified_text)
-    title = html_module.escape(title)
+    title = cgi.escape(title)
     return html.format(title=title, css=css_str, body=result)
 
 #### LaTeX Output ##########################################
@@ -194,11 +193,7 @@ def latex_highlight(classified_text, title = 'python',
 
 
 if __name__ == '__main__':
-    import argparse
-    import os.path
-    import sys
-    import textwrap
-    import webbrowser
+    import sys, argparse, webbrowser, os, textwrap
 
     parser = argparse.ArgumentParser(
             description = 'Add syntax highlighting to Python source code',

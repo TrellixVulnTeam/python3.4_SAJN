@@ -285,18 +285,17 @@ class BaseTest:
 
     def test_iterator_pickle(self):
         data = array.array(self.typecode, self.example)
-        for proto in range(pickle.HIGHEST_PROTOCOL + 1):
-            orgit = iter(data)
-            d = pickle.dumps(orgit, proto)
-            it = pickle.loads(d)
-            self.assertEqual(type(orgit), type(it))
-            self.assertEqual(list(it), list(data))
+        orgit = iter(data)
+        d = pickle.dumps(orgit)
+        it = pickle.loads(d)
+        self.assertEqual(type(orgit), type(it))
+        self.assertEqual(list(it), list(data))
 
-            if len(data):
-                it = pickle.loads(d)
-                next(it)
-                d = pickle.dumps(it, proto)
-                self.assertEqual(list(it), list(data)[1:])
+        if len(data):
+            it = pickle.loads(d)
+            next(it)
+            d = pickle.dumps(it)
+            self.assertEqual(list(it), list(data)[1:])
 
     def test_insert(self):
         a = array.array(self.typecode, self.example)

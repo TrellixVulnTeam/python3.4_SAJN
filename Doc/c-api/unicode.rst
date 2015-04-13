@@ -556,8 +556,7 @@ APIs:
    Coerce an encoded object *obj* to an Unicode object and return a reference with
    incremented refcount.
 
-   :class:`bytes`, :class:`bytearray` and other
-   :term:`bytes-like objects <bytes-like object>`
+   :class:`bytes`, :class:`bytearray` and other char buffer compatible objects
    are decoded according to the given *encoding* and using the error handling
    defined by *errors*. Both can be *NULL* to have the interface use the default
    values (see the next section for details).
@@ -1134,7 +1133,7 @@ These are the UTF-32 codec APIs:
    mark (U+FEFF). In the other two modes, no BOM mark is prepended.
 
    If *Py_UNICODE_WIDE* is not defined, surrogate pairs will be output
-   as a single code point.
+   as a single codepoint.
 
    Return *NULL* if an exception was raised by the codec.
 
@@ -1569,7 +1568,7 @@ They all return *NULL* or ``-1`` if an exception occurs.
    Unicode string.
 
 
-.. c:function:: Py_ssize_t PyUnicode_Tailmatch(PyObject *str, PyObject *substr, \
+.. c:function:: int PyUnicode_Tailmatch(PyObject *str, PyObject *substr, \
                         Py_ssize_t start, Py_ssize_t end, int direction)
 
    Return 1 if *substr* matches ``str[start:end]`` at the given tail end

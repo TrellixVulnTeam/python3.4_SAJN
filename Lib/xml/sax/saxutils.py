@@ -346,7 +346,7 @@ def prepare_input_source(source, base=""):
         f = source
         source = xmlreader.InputSource()
         source.setByteStream(f)
-        if hasattr(f, "name") and isinstance(f.name, str):
+        if hasattr(f, "name"):
             source.setSystemId(f.name)
 
     if source.getByteStream() is None:

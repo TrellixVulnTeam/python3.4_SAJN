@@ -716,11 +716,9 @@ class _TestQueue(BaseTestCase):
     def test_timeout(self):
         q = multiprocessing.Queue()
         start = time.time()
-        self.assertRaises(pyqueue.Empty, q.get, True, 0.200)
+        self.assertRaises(pyqueue.Empty, q.get, True, 0.2)
         delta = time.time() - start
-        # Tolerate a delta of 30 ms because of the bad clock resolution on
-        # Windows (usually 15.6 ms)
-        self.assertGreaterEqual(delta, 0.170)
+        self.assertGreaterEqual(delta, 0.18)
 
 #
 #

@@ -563,8 +563,7 @@ than raw I/O does.
 .. class:: BytesIO([initial_bytes])
 
    A stream implementation using an in-memory bytes buffer.  It inherits
-   :class:`BufferedIOBase`.  The buffer is discarded when the
-   :meth:`~IOBase.close` method is called.
+   :class:`BufferedIOBase`.
 
    The argument *initial_bytes* contains optional initial :class:`bytes` data.
 
@@ -585,14 +584,13 @@ than raw I/O does.
 
       .. note::
          As long as the view exists, the :class:`BytesIO` object cannot be
-         resized or closed.
+         resized.
 
       .. versionadded:: 3.2
 
    .. method:: getvalue()
 
       Return :class:`bytes` containing the entire contents of the buffer.
-
 
    .. method:: read1()
 
@@ -860,8 +858,7 @@ Text I/O
 
 .. class:: StringIO(initial_value='', newline='\\n')
 
-   An in-memory stream for text I/O.  The text buffer is discarded when the
-   :meth:`~IOBase.close` method is called.
+   An in-memory stream for text I/O.
 
    The initial value of the buffer (an empty string by default) can be set by
    providing *initial_value*.  The *newline* argument works like that of
@@ -873,7 +870,9 @@ Text I/O
 
    .. method:: getvalue()
 
-      Return a ``str`` containing the entire contents of the buffer.
+      Return a ``str`` containing the entire contents of the buffer at any
+      time before the :class:`StringIO` object's :meth:`close` method is
+      called.
 
    Example usage::
 

@@ -415,6 +415,10 @@ class StreamReaderTests(test_utils.TestCase):
         def set_err():
             stream.set_exception(ValueError())
 
+        @asyncio.coroutine
+        def readline():
+            yield from stream.readline()
+
         t1 = asyncio.Task(stream.readline(), loop=self.loop)
         t2 = asyncio.Task(set_err(), loop=self.loop)
 
@@ -425,7 +429,11 @@ class StreamReaderTests(test_utils.TestCase):
     def test_exception_cancel(self):
         stream = asyncio.StreamReader(loop=self.loop)
 
-        t = asyncio.Task(stream.readline(), loop=self.loop)
+        @asyncio.coroutine
+        def read_a_line():
+            yield from stream.readline()
+
+        t = asyncio.Task(read_a_line(), loop=self.loop)
         test_utils.run_briefly(self.loop)
         t.cancel()
         test_utils.run_briefly(self.loop)
@@ -605,10 +613,8 @@ os.close(fd)
         watcher.attach_loop(self.loop)
         try:
             asyncio.set_child_watcher(watcher)
-            create = asyncio.create_subprocess_exec(*args,
-                                                    pass_fds={wfd},
-                                                    loop=self.loop)
-            proc = self.loop.run_until_complete(create)
+            proc = self.loop.run_until_complete(
+                asyncio.create_subprocess_exec(*args, pass_fds={wfd}, loop=self.loop))
             self.loop.run_until_complete(proc.wait())
         finally:
             asyncio.set_child_watcher(None)
@@ -616,25 +622,6 @@ os.close(fd)
         os.close(wfd)
         data = self.loop.run_until_complete(reader.read(-1))
         self.assertEqual(data, b'data')
-
-    def test_streamreader_constructor(self):
-        self.addCleanup(asyncio.set_event_loop, None)
-        asyncio.set_event_loop(self.loop)
-
-        # Tulip issue #184: Ensure that StreamReaderProtocol constructor
-        # retrieves the current loop if the loop parameter is not set
-        reader = asyncio.StreamReader()
-        self.assertIs(reader._loop, self.loop)
-
-    def test_streamreaderprotocol_constructor(self):
-        self.addCleanup(asyncio.set_event_loop, None)
-        asyncio.set_event_loop(self.loop)
-
-        # Tulip issue #184: Ensure that StreamReaderProtocol constructor
-        # retrieves the current loop if the loop parameter is not set
-        reader = mock.Mock()
-        protocol = asyncio.StreamReaderProtocol(reader)
-        self.assertIs(protocol._loop, self.loop)
 
 
 if __name__ == '__main__':

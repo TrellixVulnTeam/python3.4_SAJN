@@ -6,9 +6,10 @@
 # You can set these variables from the command line.
 PYTHON       = python
 SPHINXBUILD  = sphinx-build
+SPHINXOPTS   =
 PAPER        =
 SOURCES      =
-DISTVERSION  = $(shell $(PYTHON) tools/extensions/patchlevel.py)
+DISTVERSION  = $(shell $(PYTHON) tools/sphinxext/patchlevel.py)
 
 ALLSPHINXOPTS = -b $(BUILDER) -d build/doctrees -D latex_paper_size=$(PAPER) \
                 $(SPHINXOPTS) . build/$(BUILDER) $(SOURCES)
@@ -79,7 +80,7 @@ suspicious:
 	@$(MAKE) build BUILDER=$(BUILDER) || { \
 	echo "Suspicious check complete; look for any errors in the above output" \
 	     "or in build/$(BUILDER)/suspicious.csv.  If all issues are false" \
-	     "positives, append that file to tools/susp-ignored.csv."; \
+	     "positives, append that file to tools/sphinxext/susp-ignored.csv."; \
 	false; }
 
 coverage: BUILDER = coverage
@@ -164,10 +165,9 @@ autobuild-dev:
 autobuild-html:
 	make html SPHINXOPTS='-A daily=1 -A versionswitcher=1'
 
-# for stable releases: only build if not in pre-release stage (alpha, beta)
-# release candidate downloads are okay, since the stable tree can be in that stage
+# for stable releases: only build if not in pre-release stage (alpha, beta, rc)
 autobuild-stable:
-	@case $(DISTVERSION) in *[ab]*) \
+	@case $(DISTVERSION) in *[abc]*) \
 		echo "Not building; $(DISTVERSION) is not a release version."; \
 		exit 1;; \
 	esac

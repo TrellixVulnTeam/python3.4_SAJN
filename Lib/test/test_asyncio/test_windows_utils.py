@@ -2,8 +2,9 @@
 
 import socket
 import sys
+import test.support
 import unittest
-import warnings
+from test.support import IPV6_ENABLED
 from unittest import mock
 
 if sys.platform != 'win32':
@@ -11,12 +12,8 @@ if sys.platform != 'win32':
 
 import _winapi
 
-from asyncio import _overlapped
 from asyncio import windows_utils
-try:
-    from test import support
-except ImportError:
-    from asyncio import test_support as support
+from asyncio import _overlapped
 
 
 class WinsocketpairTests(unittest.TestCase):
@@ -31,13 +28,11 @@ class WinsocketpairTests(unittest.TestCase):
         ssock, csock = windows_utils.socketpair()
         self.check_winsocketpair(ssock, csock)
 
-    @unittest.skipUnless(support.IPV6_ENABLED, 'IPv6 not supported or enabled')
+    @unittest.skipUnless(IPV6_ENABLED, 'IPv6 not supported or enabled')
     def test_winsocketpair_ipv6(self):
         ssock, csock = windows_utils.socketpair(family=socket.AF_INET6)
         self.check_winsocketpair(ssock, csock)
 
-    @unittest.skipIf(hasattr(socket, 'socketpair'),
-                     'socket.socketpair is available')
     @mock.patch('asyncio.windows_utils.socket')
     def test_winsocketpair_exc(self, m_socket):
         m_socket.AF_INET = socket.AF_INET
@@ -56,8 +51,6 @@ class WinsocketpairTests(unittest.TestCase):
         self.assertRaises(ValueError,
                           windows_utils.socketpair, proto=1)
 
-    @unittest.skipIf(hasattr(socket, 'socketpair'),
-                     'socket.socketpair is available')
     @mock.patch('asyncio.windows_utils.socket')
     def test_winsocketpair_close(self, m_socket):
         m_socket.AF_INET = socket.AF_INET
@@ -116,10 +109,8 @@ class PipeTests(unittest.TestCase):
         self.assertEqual(p.handle, h)
 
         # check garbage collection of p closes handle
-        with warnings.catch_warnings():
-            warnings.filterwarnings("ignore", "",  ResourceWarning)
-            del p
-            support.gc_collect()
+        del p
+        test.support.gc_collect()
         try:
             _winapi.CloseHandle(h)
         except OSError as e:
@@ -173,9 +164,7 @@ class PopenTests(unittest.TestCase):
         self.assertTrue(msg.upper().rstrip().startswith(out))
         self.assertTrue(b"stderr".startswith(err))
 
-        # The context manager calls wait() and closes resources
-        with p:
-            pass
+        p.wait()
 
 
 if __name__ == '__main__':

@@ -463,45 +463,39 @@ KeepRef(CDataObject *target, Py_ssize_t index, PyObject *keep);
 static PyObject *
 CDataType_from_buffer(PyObject *type, PyObject *args)
 {
-    Py_buffer buffer;
+    void *buffer;
+    Py_ssize_t buffer_len;
     Py_ssize_t offset = 0;
-    PyObject *result, *mv;
+    PyObject *obj, *result;
     StgDictObject *dict = PyType_stgdict(type);
     assert (dict);
 
-    if (!PyArg_ParseTuple(args, "w*|n:from_buffer", &buffer, &offset))
+    if (!PyArg_ParseTuple(args, "O|n:from_buffer", &obj, &offset))
+        return NULL;
+
+    if (-1 == PyObject_AsWriteBuffer(obj, &buffer, &buffer_len))
         return NULL;
 
     if (offset < 0) {
         PyErr_SetString(PyExc_ValueError,
                         "offset cannot be negative");
-        PyBuffer_Release(&buffer);
         return NULL;
     }
-    if (dict->size > buffer.len - offset) {
+    if (dict->size > buffer_len - offset) {
         PyErr_Format(PyExc_ValueError,
                      "Buffer size too small (%zd instead of at least %zd bytes)",
-                     buffer.len, dict->size + offset);
-        PyBuffer_Release(&buffer);
+                     buffer_len, dict->size + offset);
         return NULL;
     }
 
-    result = PyCData_AtAddress(type, (char *)buffer.buf + offset);
-    if (result == NULL) {
-        PyBuffer_Release(&buffer);
+    result = PyCData_AtAddress(type, (char *)buffer + offset);
+    if (result == NULL)
         return NULL;
-    }
 
-    mv = PyMemoryView_FromBuffer(&buffer);
-    if (mv == NULL) {
-        PyBuffer_Release(&buffer);
+    Py_INCREF(obj);
+    if (-1 == KeepRef((CDataObject *)result, -1, obj)) {
         return NULL;
     }
-    /* Hack the memoryview so that it will release the buffer. */
-    ((PyMemoryViewObject *)mv)->mbuf->master.obj = buffer.obj;
-    ((PyMemoryViewObject *)mv)->view.obj = buffer.obj;
-    if (-1 == KeepRef((CDataObject *)result, -1, mv))
-        result = NULL;
     return result;
 }
 
@@ -514,36 +508,37 @@ GenericPyCData_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
 static PyObject *
 CDataType_from_buffer_copy(PyObject *type, PyObject *args)
 {
-    Py_buffer buffer;
+    const void *buffer;
+    Py_ssize_t buffer_len;
     Py_ssize_t offset = 0;
-    PyObject *result;
+    PyObject *obj, *result;
     StgDictObject *dict = PyType_stgdict(type);
     assert (dict);
 
-    if (!PyArg_ParseTuple(args, "y*|n:from_buffer", &buffer, &offset))
+    if (!PyArg_ParseTuple(args, "O|n:from_buffer", &obj, &offset))
+        return NULL;
+
+    if (-1 == PyObject_AsReadBuffer(obj, (const void**)&buffer, &buffer_len))
         return NULL;
 
     if (offset < 0) {
         PyErr_SetString(PyExc_ValueError,
                         "offset cannot be negative");
-        PyBuffer_Release(&buffer);
         return NULL;
     }
 
-    if (dict->size > buffer.len - offset) {
+    if (dict->size > buffer_len - offset) {
         PyErr_Format(PyExc_ValueError,
                      "Buffer size too small (%zd instead of at least %zd bytes)",
-                     buffer.len, dict->size + offset);
-        PyBuffer_Release(&buffer);
+                     buffer_len, dict->size + offset);
         return NULL;
     }
 
     result = GenericPyCData_new((PyTypeObject *)type, NULL, NULL);
-    if (result != NULL) {
-        memcpy(((CDataObject *)result)->b_ptr,
-               (char *)buffer.buf + offset, dict->size);
-    }
-    PyBuffer_Release(&buffer);
+    if (result == NULL)
+        return NULL;
+    memcpy(((CDataObject *)result)->b_ptr,
+           (char *)buffer+offset, dict->size);
     return result;
 }
 
@@ -4835,7 +4830,7 @@ Pointer_set_contents(CDataObject *self, PyObject *value, void *closure)
     *(void **)self->b_ptr = dst->b_ptr;
 
     /*
-       A Pointer instance must keep the value it points to alive.  So, a
+       A Pointer instance must keep a the value it points to alive.  So, a
        pointer instance has b_length set to 2 instead of 1, and we set
        'value' itself as the second item of the b_objects list, additionally.
     */

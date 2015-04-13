@@ -745,8 +745,9 @@ class IMAP4:
             ssl_context = ssl._create_stdlib_context()
         typ, dat = self._simple_command(name)
         if typ == 'OK':
+            server_hostname = self.host if ssl.HAS_SNI else None
             self.sock = ssl_context.wrap_socket(self.sock,
-                                                server_hostname=self.host)
+                                                server_hostname=server_hostname)
             self.file = self.sock.makefile('rb')
             self._tls_established = True
             self._get_capabilities()
@@ -1222,8 +1223,9 @@ if HAVE_SSL:
 
         def _create_socket(self):
             sock = IMAP4._create_socket(self)
+            server_hostname = self.host if ssl.HAS_SNI else None
             return self.ssl_context.wrap_socket(sock,
-                                                server_hostname=self.host)
+                                                server_hostname=server_hostname)
 
         def open(self, host='', port=IMAP4_SSL_PORT):
             """Setup connection to remote server on "host:port".

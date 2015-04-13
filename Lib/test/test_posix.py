@@ -1125,19 +1125,18 @@ class PosixTester(unittest.TestCase):
         """
         Test functions that call path_error2(), providing two filenames in their exceptions.
         """
-        for name in ("rename", "replace", "link"):
+        for name in ("rename", "replace", "link", "symlink"):
             function = getattr(os, name, None)
-            if function is None:
-                continue
 
-            for dst in ("noodly2", support.TESTFN):
-                try:
-                    function('doesnotexistfilename', dst)
-                except OSError as e:
-                    self.assertIn("'doesnotexistfilename' -> '{}'".format(dst), str(e))
-                    break
-            else:
-                self.fail("No valid path_error2() test for os." + name)
+            if function:
+                for dst in ("noodly2", support.TESTFN):
+                    try:
+                        function('doesnotexistfilename', dst)
+                    except OSError as e:
+                        self.assertIn("'doesnotexistfilename' -> '{}'".format(dst), str(e))
+                        break
+                else:
+                    self.fail("No valid path_error2() test for os." + name)
 
 class PosixGroupsTester(unittest.TestCase):
 

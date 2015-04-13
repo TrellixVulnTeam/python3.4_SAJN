@@ -684,8 +684,9 @@ class SMTP:
             if context is None:
                 context = ssl._create_stdlib_context(certfile=certfile,
                                                      keyfile=keyfile)
+            server_hostname = self._host if ssl.HAS_SNI else None
             self.sock = context.wrap_socket(self.sock,
-                                            server_hostname=self._host)
+                                            server_hostname=server_hostname)
             self.file = None
             # RFC 3207:
             # The client MUST discard any knowledge obtained from
@@ -914,8 +915,9 @@ if _have_ssl:
                 print('connect:', (host, port), file=stderr)
             new_socket = socket.create_connection((host, port), timeout,
                     self.source_address)
+            server_hostname = self._host if ssl.HAS_SNI else None
             new_socket = self.context.wrap_socket(new_socket,
-                                                  server_hostname=self._host)
+                                                  server_hostname=server_hostname)
             return new_socket
 
     __all__.append("SMTP_SSL")

@@ -151,9 +151,6 @@ class PyShellEditorWindow(EditorWindow):
 
     def color_breakpoint_text(self, color=True):
         "Turn colorizing of breakpoint text on or off"
-        if self.io is None:
-            # possible due to update in restore_file_breaks
-            return
         if color:
             theme = idleConf.GetOption('main','Theme','name')
             cfg = idleConf.GetHighlight(theme, "break")
@@ -230,8 +227,13 @@ class PyShellEditorWindow(EditorWindow):
         #     This is necessary to keep the saved breaks synched with the
         #     saved file.
         #
-        #     Breakpoints are set as tagged ranges in the text.
-        #     Since a modified file has to be saved before it is
+        #     Breakpoints are set as tagged ranges in the text.  Certain
+        #     kinds of edits cause these ranges to be deleted: Inserting
+        #     or deleting a line just before a breakpoint, and certain
+        #     deletions prior to a breakpoint.  These issues need to be
+        #     investigated and understood.  It's not clear if they are
+        #     Tk issues or IDLE issues, or whether they can actually
+        #     be fixed.  Since a modified file has to be saved before it is
         #     run, and since self.breakpoints (from which the subprocess
         #     debugger is loaded) is updated during the save, the visible
         #     breaks stay synched with the subprocess even if one of these
@@ -848,9 +850,12 @@ class PyShell(OutputWindow):
         ("edit", "_Edit"),
         ("debug", "_Debug"),
         ("options", "_Options"),
-        ("windows", "_Window"),
+        ("windows", "_Windows"),
         ("help", "_Help"),
     ]
+
+    if sys.platform == "darwin":
+        menu_specs[-2] = ("windows", "_Window")
 
 
     # New classes

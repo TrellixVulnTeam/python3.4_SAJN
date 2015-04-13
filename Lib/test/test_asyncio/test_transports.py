@@ -69,8 +69,7 @@ class TransportTests(unittest.TestCase):
             def get_write_buffer_size(self):
                 return 512
 
-        loop = mock.Mock()
-        transport = MyTransport(loop=loop)
+        transport = MyTransport()
         transport._protocol = mock.Mock()
 
         self.assertFalse(transport._protocol_paused)

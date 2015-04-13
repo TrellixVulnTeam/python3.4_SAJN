@@ -173,12 +173,11 @@ class TreeNode:
 
     def draw(self, x, y):
         # XXX This hard-codes too many geometry constants!
-        dy = 20
         self.x, self.y = x, y
         self.drawicon()
         self.drawtext()
         if self.state != 'expanded':
-            return y + dy
+            return y+17
         # draw children
         if not self.children:
             sublist = self.item._GetSubList()
@@ -189,7 +188,7 @@ class TreeNode:
                 child = self.__class__(self.canvas, self, item)
                 self.children.append(child)
         cx = x+20
-        cy = y + dy
+        cy = y+17
         cylast = 0
         for child in self.children:
             cylast = cy
@@ -228,7 +227,7 @@ class TreeNode:
 
     def drawtext(self):
         textx = self.x+20-1
-        texty = self.y-4
+        texty = self.y-1
         labeltext = self.item.GetLabelText()
         if labeltext:
             id = self.canvas.create_text(textx, texty, anchor="nw",

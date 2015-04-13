@@ -199,17 +199,12 @@ For example, assume we want to create a list of squares, like::
    >>> squares
    [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
 
-Note that this creates (or overwrites) a variable named ``x`` that still exists
-after the loop completes.  We can calculate the list of squares without any
-side effects using::
-
-   squares = list(map(lambda x: x**2, range(10)))
-
-or, equivalently::
+We can obtain the same result with::
 
    squares = [x**2 for x in range(10)]
 
-which is more concise and readable.
+This is also equivalent to ``squares = list(map(lambda x: x**2, range(10)))``,
+but it's more concise and readable.
 
 A list comprehension consists of brackets containing an expression followed
 by a :keyword:`for` clause, then zero or more :keyword:`for` or :keyword:`if`
@@ -684,7 +679,7 @@ the same type, the lexicographical comparison is carried out recursively.  If
 all items of two sequences compare equal, the sequences are considered equal.
 If one sequence is an initial sub-sequence of the other, the shorter sequence is
 the smaller (lesser) one.  Lexicographical ordering for strings uses the Unicode
-code point number to order individual characters.  Some examples of comparisons
+codepoint number to order individual characters.  Some examples of comparisons
 between sequences of the same type::
 
    (1, 2, 3)              < (1, 2, 4)

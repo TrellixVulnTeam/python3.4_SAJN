@@ -559,10 +559,10 @@ PyDoc_STRVAR(chr_doc,
 Return a Unicode string of one character with ordinal i; 0 <= i <= 0x10ffff.");
 
 
-static const char *
-source_as_string(PyObject *cmd, const char *funcname, const char *what, PyCompilerFlags *cf, Py_buffer *view)
+static char *
+source_as_string(PyObject *cmd, char *funcname, char *what, PyCompilerFlags *cf)
 {
-    const char *str;
+    char *str;
     Py_ssize_t size;
 
     if (PyUnicode_Check(cmd)) {
@@ -571,21 +571,19 @@ source_as_string(PyObject *cmd, const char *funcname, const char *what, PyCompil
         if (str == NULL)
             return NULL;
     }
-    else if (PyObject_GetBuffer(cmd, view, PyBUF_SIMPLE) == 0) {
-        str = (const char *)view->buf;
-        size = view->len;
-    }
-    else {
+    else if (!PyObject_CheckReadBuffer(cmd)) {
         PyErr_Format(PyExc_TypeError,
           "%s() arg 1 must be a %s object",
           funcname, what);
+        return NULL;
+    }
+    else if (PyObject_AsReadBuffer(cmd, (const void **)&str, &size) < 0) {
         return NULL;
     }
 
     if (strlen(str) != size) {
         PyErr_SetString(PyExc_TypeError,
                         "source code string cannot contain null bytes");
-        PyBuffer_Release(view);
         return NULL;
     }
     return str;
@@ -594,8 +592,7 @@ source_as_string(PyObject *cmd, const char *funcname, const char *what, PyCompil
 static PyObject *
 builtin_compile(PyObject *self, PyObject *args, PyObject *kwds)
 {
-    Py_buffer view = {NULL, NULL};
-    const char *str;
+    char *str;
     PyObject *filename;
     char *startstr;
     int mode = -1;
@@ -681,12 +678,11 @@ builtin_compile(PyObject *self, PyObject *args, PyObject *kwds)
         goto finally;
     }
 
-    str = source_as_string(cmd, "compile", "string, bytes or AST", &cf, &view);
+    str = source_as_string(cmd, "compile", "string, bytes or AST", &cf);
     if (str == NULL)
         goto error;
 
     result = Py_CompileStringObject(str, filename, start[mode], &cf, optimize);
-    PyBuffer_Release(&view);
     goto finally;
 
 error:
@@ -756,8 +752,7 @@ builtin_eval(PyObject *self, PyObject *args)
 {
     PyObject *cmd, *result, *tmp = NULL;
     PyObject *globals = Py_None, *locals = Py_None;
-    Py_buffer view = {NULL, NULL};
-    const char *str;
+    char *str;
     PyCompilerFlags cf;
 
     if (!PyArg_UnpackTuple(args, "eval", 1, 3, &cmd, &globals, &locals))
@@ -806,7 +801,7 @@ builtin_eval(PyObject *self, PyObject *args)
     }
 
     cf.cf_flags = PyCF_SOURCE_IS_UTF8;
-    str = source_as_string(cmd, "eval", "string, bytes or code", &cf, &view);
+    str = source_as_string(cmd, "eval", "string, bytes or code", &cf);
     if (str == NULL)
         return NULL;
 
@@ -815,7 +810,6 @@ builtin_eval(PyObject *self, PyObject *args)
 
     (void)PyEval_MergeCompilerFlags(&cf);
     result = PyRun_StringFlags(str, Py_eval_input, globals, locals, &cf);
-    PyBuffer_Release(&view);
     Py_XDECREF(tmp);
     return result;
 }
@@ -882,12 +876,11 @@ builtin_exec(PyObject *self, PyObject *args)
         v = PyEval_EvalCode(prog, globals, locals);
     }
     else {
-        Py_buffer view = {NULL, NULL};
-        const char *str;
+        char *str;
         PyCompilerFlags cf;
         cf.cf_flags = PyCF_SOURCE_IS_UTF8;
         str = source_as_string(prog, "exec",
-                                     "string, bytes or code", &cf, &view);
+                                     "string, bytes or code", &cf);
         if (str == NULL)
             return NULL;
         if (PyEval_MergeCompilerFlags(&cf))
@@ -895,7 +888,6 @@ builtin_exec(PyObject *self, PyObject *args)
                                   locals, &cf);
         else
             v = PyRun_String(str, Py_file_input, globals, locals);
-        PyBuffer_Release(&view);
     }
     if (v == NULL)
         return NULL;

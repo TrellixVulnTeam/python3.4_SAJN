@@ -437,18 +437,17 @@ PyDoc_STRVAR(readinto_doc,
 "is set not to block as has no data to read.");
 
 static PyObject *
-bytesio_readinto(bytesio *self, PyObject *arg)
+bytesio_readinto(bytesio *self, PyObject *buffer)
 {
-    Py_buffer buffer;
+    void *raw_buffer;
     Py_ssize_t len, n;
 
     CHECK_CLOSED(self);
 
-    if (!PyArg_Parse(arg, "w*", &buffer))
+    if (PyObject_AsWriteBuffer(buffer, &raw_buffer, &len) == -1)
         return NULL;
 
     /* adjust invalid sizes */
-    len = buffer.len;
     n = self->string_size - self->pos;
     if (len > n) {
         len = n;
@@ -456,11 +455,10 @@ bytesio_readinto(bytesio *self, PyObject *arg)
             len = 0;
     }
 
-    memcpy(buffer.buf, self->buf + self->pos, len);
+    memcpy(raw_buffer, self->buf + self->pos, len);
     assert(self->pos + len < PY_SSIZE_T_MAX);
     assert(len >= 0);
     self->pos += len;
-    PyBuffer_Release(&buffer);
 
     return PyLong_FromSsize_t(len);
 }
@@ -657,7 +655,6 @@ PyDoc_STRVAR(close_doc,
 static PyObject *
 bytesio_close(bytesio *self)
 {
-    CHECK_EXPORTS(self);
     if (self->buf != NULL) {
         PyMem_Free(self->buf);
         self->buf = NULL;

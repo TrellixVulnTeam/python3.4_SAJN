@@ -77,59 +77,28 @@ Coroutines (and tasks) can only run when the event loop is running.
 
 .. _asyncio-hello-world-coroutine:
 
-Example: Hello World coroutine
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Example: "Hello World" coroutine
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Example of coroutine displaying ``"Hello World"``::
+Print ``"Hello World"`` every two seconds using a coroutine::
 
     import asyncio
 
     @asyncio.coroutine
-    def hello_world():
-        print("Hello World!")
-
-    loop = asyncio.get_event_loop()
-    # Blocking call which returns when the hello_world() coroutine is done
-    loop.run_until_complete(hello_world())
-    loop.close()
-
-.. seealso::
-
-   The :ref:`Hello World with call_soon() <asyncio-hello-world-callback>`
-   example uses the :meth:`BaseEventLoop.call_soon` method to schedule a
-   callback.
-
-
-.. _asyncio-date-coroutine:
-
-Example: Coroutine displaying the current date
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Example of coroutine displaying the current date every second during 5 seconds
-using the :meth:`sleep` function::
-
-    import asyncio
-    import datetime
-
-    @asyncio.coroutine
-    def display_date(loop):
-        end_time = loop.time() + 5.0
+    def greet_every_two_seconds():
         while True:
-            print(datetime.datetime.now())
-            if (loop.time() + 1.0) >= end_time:
-                break
-            yield from asyncio.sleep(1)
+            print('Hello World')
+            yield from asyncio.sleep(2)
 
     loop = asyncio.get_event_loop()
-    # Blocking call which returns when the display_date() coroutine is done
-    loop.run_until_complete(display_date(loop))
-    loop.close()
+    try:
+        loop.run_until_complete(greet_every_two_seconds())
+    finally:
+        loop.close()
 
 .. seealso::
 
-   The :ref:`display the current date with call_later()
-   <asyncio-date-callback>` example uses a callback with the
-   :meth:`BaseEventLoop.call_later` method.
+   :ref:`Hello World example using a callback <asyncio-hello-world-callback>`.
 
 
 Example: Chain coroutines
@@ -253,11 +222,6 @@ Future
       future is already done when this is called, the callback is scheduled
       with :meth:`~BaseEventLoop.call_soon`.
 
-      :ref:`Use functools.partial to pass parameters to the callback
-      <asyncio-pass-keywords>`. For example,
-      ``fut.add_done_callback(functools.partial(print, "Future:",
-      flush=True))`` will call ``print("Future:", fut, flush=True)``.
-
    .. method:: remove_done_callback(fn)
 
       Remove all instances of a callback from the "call when done" list.
@@ -337,9 +301,14 @@ flow::
     finally:
         loop.close()
 
-In this example, the future is used to link ``slow_operation()`` to
-``got_result()``: when ``slow_operation()`` is done, ``got_result()`` is called
-with the result.
+In this example, the future is responsible to display the result and to stop
+the loop.
+
+.. note::
+   The "slow_operation" coroutine object is only executed when the event loop
+   starts running, so it is possible to add a "done callback" to the future
+   after creating the task scheduling the coroutine object.
+
 
 
 Task
@@ -350,18 +319,18 @@ Task
    Schedule the execution of a :ref:`coroutine <coroutine>`: wrap it in a
    future. A task is a subclass of :class:`Future`.
 
-   A task is responsible for executing a coroutine object in an event loop.  If
+   A task is responsible to execute a coroutine object in an event loop.  If
    the wrapped coroutine yields from a future, the task suspends the execution
    of the wrapped coroutine and waits for the completition of the future. When
    the future is done, the execution of the wrapped coroutine restarts with the
    result or the exception of the future.
 
    Event loops use cooperative scheduling: an event loop only runs one task at
-   a time. Other tasks may run in parallel if other event loops are
+   the same time. Other tasks may run in parallel if other event loops are
    running in different threads. While a task waits for the completion of a
    future, the event loop executes a new task.
 
-   The cancellation of a task is different from the cancelation of a future. Calling
+   The cancellation of a task is different than cancelling a future. Calling
    :meth:`cancel` will throw a :exc:`~concurrent.futures.CancelledError` to the
    wrapped coroutine. :meth:`~Future.cancelled` only returns ``True`` if the
    wrapped coroutine did not catch the
@@ -372,7 +341,7 @@ Task
    <coroutine>` did not complete. It is probably a bug and a warning is
    logged: see :ref:`Pending task destroyed <asyncio-pending-task-destroyed>`.
 
-   Don't directly create :class:`Task` instances: use the :func:`async`
+   Don't create directly :class:`Task` instances: use the :func:`async`
    function or the :meth:`BaseEventLoop.create_task` method.
 
    .. classmethod:: all_tasks(loop=None)
@@ -391,17 +360,17 @@ Task
 
    .. method:: cancel()
 
-      Request that this task cancel itself.
+      Request this task to cancel itself.
 
       This arranges for a :exc:`~concurrent.futures.CancelledError` to be
       thrown into the wrapped coroutine on the next cycle through the event
       loop. The coroutine then has a chance to clean up or even deny the
       request using try/except/finally.
 
-      Unlike :meth:`Future.cancel`, this does not guarantee that the task
+      Contrary to :meth:`Future.cancel`, this does not guarantee that the task
       will be cancelled: the exception might be caught and acted upon, delaying
-      cancellation of the task or preventing cancellation completely. The task
-      may also return a value or raise a different exception.
+      cancellation of the task or preventing it completely. The task may also
+      return a value or raise a different exception.
 
       Immediately after this method is called, :meth:`~Future.cancelled` will
       not return ``True`` (unless the task was already cancelled). A task will
@@ -413,7 +382,7 @@ Task
 
       Return the list of stack frames for this task's coroutine.
 
-      If the coroutine is not done, this returns the stack where it is suspended.
+      If the coroutine is active, this returns the stack where it is suspended.
       If the coroutine has completed successfully or was cancelled, this
       returns an empty list.  If the coroutine was terminated by an exception,
       this returns the list of traceback frames.
@@ -436,7 +405,7 @@ Task
       This produces output similar to that of the traceback module, for the
       frames retrieved by get_stack().  The limit argument is passed to
       get_stack().  The file argument is an I/O stream to which the output
-      is written; by default output is written to sys.stderr.
+      goes; by default it goes to sys.stderr.
 
 
 Example: Parallel execution of tasks
@@ -508,8 +477,7 @@ Task functions
 
 .. function:: async(coro_or_future, \*, loop=None)
 
-   Schedule the execution of a :ref:`coroutine object <coroutine>`: wrap it in
-   a future. Return a :class:`Task` object.
+   Wrap a :ref:`coroutine object <coroutine>` in a future.
 
    If the argument is a :class:`Future`, it is returned directly.
 

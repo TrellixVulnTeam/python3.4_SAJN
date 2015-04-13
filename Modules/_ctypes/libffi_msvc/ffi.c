@@ -102,15 +102,6 @@ void ffi_prep_args(char *stack, extended_cif *ecif)
 	      FFI_ASSERT(0);
 	    }
 	}
-#ifdef _WIN64
-      else if (z > 8)
-        {
-          /* On Win64, if a single argument takes more than 8 bytes,
-             then it is always passed by reference. */
-          *(void **)argp = *p_argv;
-          z = 8;
-        }
-#endif
       else
 	{
 	  memcpy(argp, *p_argv, z);
@@ -133,23 +124,12 @@ ffi_status ffi_prep_cif_machdep(ffi_cif *cif)
   switch (cif->rtype->type)
     {
     case FFI_TYPE_VOID:
+    case FFI_TYPE_STRUCT:
     case FFI_TYPE_SINT64:
     case FFI_TYPE_FLOAT:
     case FFI_TYPE_DOUBLE:
     case FFI_TYPE_LONGDOUBLE:
       cif->flags = (unsigned) cif->rtype->type;
-      break;
-
-    case FFI_TYPE_STRUCT:
-      /* MSVC returns small structures in registers.  Put in cif->flags
-         the value FFI_TYPE_STRUCT only if the structure is big enough;
-         otherwise, put the 4- or 8-bytes integer type. */
-      if (cif->rtype->size <= 4)
-        cif->flags = FFI_TYPE_INT;
-      else if (cif->rtype->size <= 8)
-        cif->flags = FFI_TYPE_SINT64;
-      else
-        cif->flags = FFI_TYPE_STRUCT;
       break;
 
     case FFI_TYPE_UINT64:
@@ -221,7 +201,8 @@ ffi_call(/*@dependent@*/ ffi_cif *cif,
 #else
     case FFI_SYSV:
       /*@-usedef@*/
-      return ffi_call_AMD64(ffi_prep_args, &ecif, cif->bytes,
+      /* Function call needs at least 40 bytes stack size, on win64 AMD64 */
+      return ffi_call_AMD64(ffi_prep_args, &ecif, cif->bytes ? cif->bytes : 40,
 			   cif->flags, ecif.rvalue, fn);
       /*@=usedef@*/
       break;
@@ -246,7 +227,7 @@ void *
 #else
 static void __fastcall
 #endif
-ffi_closure_SYSV (ffi_closure *closure, char *argp)
+ffi_closure_SYSV (ffi_closure *closure, int *argp)
 {
   // this is our return value storage
   long double    res;
@@ -256,7 +237,7 @@ ffi_closure_SYSV (ffi_closure *closure, char *argp)
   void         **arg_area;
   unsigned short rtype;
   void          *resp = (void*)&res;
-  void *args = argp + sizeof(void*);
+  void *args = &argp[1];
 
   cif         = closure->cif;
   arg_area    = (void**) alloca (cif->nargs * sizeof (void*));  

@@ -28,7 +28,7 @@ the package into Python 1.5.2.) ::
           description='Python Distribution Utilities',
           author='Greg Ward',
           author_email='gward@python.net',
-          url='https://www.python.org/sigs/distutils-sig/',
+          url='http://www.python.org/sigs/distutils-sig/',
           packages=['distutils', 'distutils.command'],
          )
 
@@ -609,7 +609,7 @@ Notes:
 (4)
     These fields should not be used if your package is to be compatible with Python
     versions prior to 2.2.3 or 2.3.  The list is available from the `PyPI website
-    <https://pypi.python.org/pypi>`_.
+    <http://pypi.python.org/pypi>`_.
 
 (5)
     The ``long_description`` field is used by PyPI when you are
@@ -628,7 +628,7 @@ Notes:
 
 'long string'
     Multiple lines of plain text in reStructuredText format (see
-    http://docutils.sourceforge.net/).
+    http://docutils.sf.net/).
 
 'list of strings'
     See below.

@@ -7,17 +7,25 @@
 # that aren't pickleable (module imports are okay, they're removed automatically).
 
 import sys, os, time
-sys.path.append(os.path.abspath('tools/extensions'))
+sys.path.append(os.path.abspath('tools/sphinxext'))
 
 # General configuration
 # ---------------------
 
 extensions = ['sphinx.ext.coverage', 'sphinx.ext.doctest',
               'pyspecific', 'c_annotations']
+templates_path = ['tools/sphinxext']
 
 # General substitutions.
 project = 'Python'
 copyright = '1990-%s, Python Software Foundation' % time.strftime('%Y')
+
+# The default replacements for |version| and |release|.
+#
+# The short X.Y version.
+# version = '2.6'
+# The full version, including alpha/beta/rc tags.
+# release = '2.6a0'
 
 # We look for the Include/patchlevel.h file in the current Python source tree
 # and replace the values accordingly.
@@ -30,30 +38,48 @@ today = ''
 # Else, today_fmt is used as the format for a strftime call.
 today_fmt = '%B %d, %Y'
 
+# List of files that shouldn't be included in the build.
+unused_docs = [
+    'maclib/scrap',
+    'library/xmllib',
+    'library/xml.etree',
+]
+
+# Ignore .rst in Sphinx its self.
+exclude_trees = ['tools/sphinx']
+
+# Relative filename of the reference count data file.
+refcount_file = 'data/refcounts.dat'
+
+# If true, '()' will be appended to :func: etc. cross-reference text.
+add_function_parentheses = True
+
+# If true, the current module name will be prepended to all description
+# unit titles (such as .. function::).
+add_module_names = True
+
 # By default, highlight as Python 3.
 highlight_language = 'python3'
 
-# Require Sphinx 1.2 for build.
-needs_sphinx = '1.2'
+needs_sphinx = '1.1'
 
 
 # Options for HTML output
 # -----------------------
 
-# Use our custom theme.
 html_theme = 'pydoctheme'
-html_theme_path = ['tools']
+html_theme_path = ['tools/sphinxext']
 html_theme_options = {'collapsiblesidebar': True}
 
-# Short title used e.g. for <title> HTML tags.
 html_short_title = '%s Documentation' % release
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
 html_last_updated_fmt = '%b %d, %Y'
 
-# Path to find HTML templates.
-templates_path = ['tools/templates']
+# If true, SmartyPants will be used to convert quotes and dashes to
+# typographically correct entities.
+html_use_smartypants = True
 
 # Custom sidebar templates, filenames relative to this file.
 html_sidebars = {
@@ -67,10 +93,10 @@ html_additional_pages = {
 }
 
 # Output an OpenSearch description file.
-html_use_opensearch = 'https://docs.python.org/' + version
+html_use_opensearch = 'http://docs.python.org/' + version
 
 # Additional static files.
-html_static_path = ['tools/static']
+html_static_path = ['tools/sphinxext/static']
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'python' + release.replace('.', '')
@@ -90,7 +116,7 @@ latex_font_size = '10pt'
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, document class [howto/manual]).
-_stdauthor = r'Guido van Rossum\\and the Python development team'
+_stdauthor = r'Guido van Rossum\\Fred L. Drake, Jr., editor'
 latex_documents = [
     ('c-api/index', 'c-api.tex',
      'The Python/C API', _stdauthor, 'manual'),
@@ -135,7 +161,6 @@ latex_appendices = ['glossary', 'about', 'license', 'copyright']
 # Get LaTeX to handle Unicode correctly
 latex_elements = {'inputenc': r'\usepackage[utf8x]{inputenc}', 'utf8extra': ''}
 
-
 # Options for the coverage checker
 # --------------------------------
 
@@ -171,19 +196,3 @@ coverage_c_regexes = {
 coverage_ignore_c_items = {
 #    'cfunction': [...]
 }
-
-
-# Options for the link checker
-# ----------------------------
-
-# Ignore certain URLs.
-linkcheck_ignore = [r'https://bugs.python.org/(issue)?\d+',
-                    # Ignore PEPs for now, they all have permanent redirects.
-                    r'http://www.python.org/dev/peps/pep-\d+']
-
-
-# Options for extensions
-# ----------------------
-
-# Relative filename of the reference count data file.
-refcount_file = 'data/refcounts.dat'

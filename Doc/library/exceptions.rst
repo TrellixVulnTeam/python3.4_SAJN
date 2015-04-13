@@ -34,8 +34,7 @@ class or one of its subclasses, and not from :exc:`BaseException`.  More
 information on defining exceptions is available in the Python Tutorial under
 :ref:`tut-userexceptions`.
 
-When raising (or re-raising) an exception in an :keyword:`except` or
-:keyword:`finally` clause
+When raising (or re-raising) an exception in an :keyword:`except` clause
 :attr:`__context__` is automatically set to the last exception caught; if the
 new exception is not handled the traceback that is eventually displayed will
 include the originating exception(s) and the final exception.

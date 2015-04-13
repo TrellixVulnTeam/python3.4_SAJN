@@ -97,10 +97,20 @@ Expression input
 ================
 
 .. index:: single: input
+
 .. index:: builtin: eval
 
-:func:`eval` is used for expression input.  It ignores leading whitespace. The
+There are two forms of expression input.  Both ignore leading whitespace. The
 string argument to :func:`eval` must have the following form:
 
 .. productionlist::
    eval_input: `expression_list` NEWLINE*
+
+.. index::
+   object: file
+   single: input; raw
+   single: readline() (file method)
+
+Note: to read 'raw' input line without interpretation, you can use the
+:meth:`readline` method of file objects, including ``sys.stdin``.
+

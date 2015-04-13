@@ -145,10 +145,7 @@ class FlowControlMixin(protocols.Protocol):
     """
 
     def __init__(self, loop=None):
-        if loop is None:
-            self._loop = events.get_event_loop()
-        else:
-            self._loop = loop
+        self._loop = loop  # May be None; we may never need it.
         self._paused = False
         self._drain_waiter = None
         self._connection_lost = False
@@ -309,12 +306,11 @@ class StreamReader:
         # it also doubles as half the buffer limit.
         self._limit = limit
         if loop is None:
-            self._loop = events.get_event_loop()
-        else:
-            self._loop = loop
+            loop = events.get_event_loop()
+        self._loop = loop
         self._buffer = bytearray()
-        self._eof = False    # Whether we're done.
-        self._waiter = None  # A future used by _wait_for_data()
+        self._eof = False  # Whether we're done.
+        self._waiter = None  # A future.
         self._exception = None
         self._transport = None
         self._paused = False
@@ -331,14 +327,6 @@ class StreamReader:
             if not waiter.cancelled():
                 waiter.set_exception(exc)
 
-    def _wakeup_waiter(self):
-        """Wakeup read() or readline() function waiting for data or EOF."""
-        waiter = self._waiter
-        if waiter is not None:
-            self._waiter = None
-            if not waiter.cancelled():
-                waiter.set_result(None)
-
     def set_transport(self, transport):
         assert self._transport is None, 'Transport already set'
         self._transport = transport
@@ -350,7 +338,11 @@ class StreamReader:
 
     def feed_eof(self):
         self._eof = True
-        self._wakeup_waiter()
+        waiter = self._waiter
+        if waiter is not None:
+            self._waiter = None
+            if not waiter.cancelled():
+                waiter.set_result(True)
 
     def at_eof(self):
         """Return True if the buffer is empty and 'feed_eof' was called."""
@@ -363,7 +355,12 @@ class StreamReader:
             return
 
         self._buffer.extend(data)
-        self._wakeup_waiter()
+
+        waiter = self._waiter
+        if waiter is not None:
+            self._waiter = None
+            if not waiter.cancelled():
+                waiter.set_result(False)
 
         if (self._transport is not None and
             not self._paused and
@@ -378,8 +375,7 @@ class StreamReader:
             else:
                 self._paused = True
 
-    def _wait_for_data(self, func_name):
-        """Wait until feed_data() or feed_eof() is called."""
+    def _create_waiter(self, func_name):
         # StreamReader uses a future to link the protocol feed_data() method
         # to a read coroutine. Running two read coroutines at the same time
         # would have an unexpected behaviour. It would not possible to know
@@ -387,12 +383,7 @@ class StreamReader:
         if self._waiter is not None:
             raise RuntimeError('%s() called while another coroutine is '
                                'already waiting for incoming data' % func_name)
-
-        self._waiter = futures.Future(loop=self._loop)
-        try:
-            yield from self._waiter
-        finally:
-            self._waiter = None
+        return futures.Future(loop=self._loop)
 
     @coroutine
     def readline(self):
@@ -422,7 +413,11 @@ class StreamReader:
                 break
 
             if not_enough:
-                yield from self._wait_for_data('readline')
+                self._waiter = self._create_waiter('readline')
+                try:
+                    yield from self._waiter
+                finally:
+                    self._waiter = None
 
         self._maybe_resume_transport()
         return bytes(line)
@@ -449,7 +444,11 @@ class StreamReader:
             return b''.join(blocks)
         else:
             if not self._buffer and not self._eof:
-                yield from self._wait_for_data('read')
+                self._waiter = self._create_waiter('read')
+                try:
+                    yield from self._waiter
+                finally:
+                    self._waiter = None
 
         if n < 0 or len(self._buffer) <= n:
             data = bytes(self._buffer)

@@ -2,11 +2,7 @@
 
 """Transform gprof(1) output into useful HTML."""
 
-import html
-import os
-import re
-import sys
-import webbrowser
+import re, os, sys, cgi, webbrowser
 
 header = """\
 <html>
@@ -26,7 +22,7 @@ trailer = """\
 def add_escapes(filename):
     with open(filename) as fp:
         for line in fp:
-            yield html.escape(line)
+            yield cgi.escape(line)
 
 
 def main():

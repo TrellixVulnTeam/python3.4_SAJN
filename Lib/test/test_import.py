@@ -1062,7 +1062,6 @@ class ImportTracebackTests(unittest.TestCase):
         # Issue #11619: The Python parser and the import machinery must not
         # encode filenames, especially on Windows
         pyname = script_helper.make_script('', TESTFN_UNENCODABLE, 'pass')
-        self.addCleanup(unlink, pyname)
         name = pyname[:-3]
         script_helper.assert_python_ok("-c", "mod = __import__(%a)" % name,
                                        __isolated=False)

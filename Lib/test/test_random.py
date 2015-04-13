@@ -159,12 +159,11 @@ class TestBasicOps:
             self.assertEqual(y1, y2)
 
     def test_pickling(self):
-        for proto in range(pickle.HIGHEST_PROTOCOL + 1):
-            state = pickle.dumps(self.gen, proto)
-            origseq = [self.gen.random() for i in range(10)]
-            newgen = pickle.loads(state)
-            restoredseq = [newgen.random() for i in range(10)]
-            self.assertEqual(origseq, restoredseq)
+        state = pickle.dumps(self.gen)
+        origseq = [self.gen.random() for i in range(10)]
+        newgen = pickle.loads(state)
+        restoredseq = [newgen.random() for i in range(10)]
+        self.assertEqual(origseq, restoredseq)
 
     def test_bug_1727780(self):
         # verify that version-2-pickles can be loaded
@@ -216,8 +215,7 @@ class SystemRandom_TestBasicOps(TestBasicOps, unittest.TestCase):
         self.assertEqual(self.gen.gauss_next, None)
 
     def test_pickling(self):
-        for proto in range(pickle.HIGHEST_PROTOCOL + 1):
-            self.assertRaises(NotImplementedError, pickle.dumps, self.gen, proto)
+        self.assertRaises(NotImplementedError, pickle.dumps, self.gen)
 
     def test_53_bits_per_float(self):
         # This should pass whenever a C double has 53 bit precision.

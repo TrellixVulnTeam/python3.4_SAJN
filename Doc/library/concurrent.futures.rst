@@ -391,8 +391,6 @@ Module Functions
 Exception classes
 -----------------
 
-.. currentmodule:: concurrent.futures.process
-
 .. exception:: BrokenProcessPool
 
    Derived from :exc:`RuntimeError`, this exception class is raised when

@@ -152,8 +152,7 @@ def main():
     file_paths = changed_files()
     python_files = [fn for fn in file_paths if fn.endswith('.py')]
     c_files = [fn for fn in file_paths if fn.endswith(('.c', '.h'))]
-    doc_files = [fn for fn in file_paths if fn.startswith('Doc') and
-                 fn.endswith(('.rst', '.inc'))]
+    doc_files = [fn for fn in file_paths if fn.startswith('Doc')]
     misc_files = {os.path.join('Misc', 'ACKS'), os.path.join('Misc', 'NEWS')}\
             & set(file_paths)
     # PEP 8 whitespace rules enforcement.

@@ -793,7 +793,7 @@ class _BufferedIOMixin(BufferedIOBase):
         clsname = self.__class__.__name__
         try:
             name = self.name
-        except Exception:
+        except AttributeError:
             return "<_pyio.{0}>".format(clsname)
         else:
             return "<_pyio.{0} name={1!r}>".format(clsname, name)
@@ -833,13 +833,7 @@ class BytesIO(BufferedIOBase):
     def getbuffer(self):
         """Return a readable and writable view of the buffer.
         """
-        if self.closed:
-            raise ValueError("getbuffer on closed file")
         return memoryview(self._buffer)
-
-    def close(self):
-        self._buffer.clear()
-        super().close()
 
     def read(self, size=None):
         if self.closed:
@@ -1567,13 +1561,13 @@ class TextIOWrapper(TextIOBase):
         result = "<_pyio.TextIOWrapper"
         try:
             name = self.name
-        except Exception:
+        except AttributeError:
             pass
         else:
             result += " name={0!r}".format(name)
         try:
             mode = self.mode
-        except Exception:
+        except AttributeError:
             pass
         else:
             result += " mode={0!r}".format(mode)

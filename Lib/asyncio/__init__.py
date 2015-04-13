@@ -18,7 +18,6 @@ if sys.platform == 'win32':
         import _overlapped  # Will also be exported.
 
 # This relies on each of the submodules having an __all__ variable.
-from .base_events import *
 from .coroutines import *
 from .events import *
 from .futures import *
@@ -30,8 +29,7 @@ from .subprocess import *
 from .tasks import *
 from .transports import *
 
-__all__ = (base_events.__all__ +
-           coroutines.__all__ +
+__all__ = (coroutines.__all__ +
            events.__all__ +
            futures.__all__ +
            locks.__all__ +

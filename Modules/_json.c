@@ -182,24 +182,17 @@ ascii_escape_unicode(PyObject *pystr)
     /* Compute the output size */
     for (i = 0, output_size = 2; i < input_chars; i++) {
         Py_UCS4 c = PyUnicode_READ(kind, input, i);
-        Py_ssize_t d;
-        if (S_CHAR(c)) {
-            d = 1;
-        }
+        if (S_CHAR(c))
+            output_size++;
         else {
             switch(c) {
             case '\\': case '"': case '\b': case '\f':
             case '\n': case '\r': case '\t':
-                d = 2; break;
+                output_size += 2; break;
             default:
-                d = c >= 0x10000 ? 12 : 6;
+                output_size += c >= 0x10000 ? 12 : 6;
             }
         }
-        if (output_size > PY_SSIZE_T_MAX - d) {
-            PyErr_SetString(PyExc_OverflowError, "string is too long to escape");
-            return NULL;
-        }
-        output_size += d;
     }
 
     rval = PyUnicode_New(output_size, 127);

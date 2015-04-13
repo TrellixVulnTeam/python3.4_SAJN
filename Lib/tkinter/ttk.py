@@ -1456,11 +1456,7 @@ class Treeview(Widget, tkinter.XView, tkinter.YView):
         all items which have the specified tag.
 
         * Availability: Tk 8.6"""
-        if item is None:
-            return self.tk.splitlist(
-                self.tk.call(self._w, "tag", "has", tagname))
-        else:
-            return self.tk.getboolean(
+        return self.tk.getboolean(
                 self.tk.call(self._w, "tag", "has", tagname, item))
 
 

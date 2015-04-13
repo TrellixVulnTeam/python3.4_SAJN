@@ -12,6 +12,7 @@ The full list of modules described in this chapter is:
 
 .. toctree::
 
+   imp.rst
    zipimport.rst
    pkgutil.rst
    modulefinder.rst

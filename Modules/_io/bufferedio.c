@@ -543,8 +543,20 @@ buffered_close(buffered *self, PyObject *args)
     }
 
     if (exc != NULL) {
-        _PyErr_ChainExceptions(exc, val, tb);
-        Py_CLEAR(res);
+        if (res != NULL) {
+            Py_CLEAR(res);
+            PyErr_Restore(exc, val, tb);
+        }
+        else {
+            PyObject *exc2, *val2, *tb2;
+            PyErr_Fetch(&exc2, &val2, &tb2);
+            PyErr_NormalizeException(&exc, &val, &tb);
+            Py_DECREF(exc);
+            Py_XDECREF(tb);
+            PyErr_NormalizeException(&exc2, &val2, &tb2);
+            PyException_SetContext(val2, val);
+            PyErr_Restore(exc2, val2, tb2);
+        }
     }
 
 end:
@@ -1359,7 +1371,7 @@ buffered_repr(buffered *self)
 
     nameobj = _PyObject_GetAttrId((PyObject *) self, &PyId_name);
     if (nameobj == NULL) {
-        if (PyErr_ExceptionMatches(PyExc_Exception))
+        if (PyErr_ExceptionMatches(PyExc_AttributeError))
             PyErr_Clear();
         else
             return NULL;
@@ -2285,8 +2297,6 @@ static void
 bufferedrwpair_dealloc(rwpair *self)
 {
     _PyObject_GC_UNTRACK(self);
-    if (self->weakreflist != NULL)
-        PyObject_ClearWeakRefs((PyObject *)self);
     Py_CLEAR(self->reader);
     Py_CLEAR(self->writer);
     Py_CLEAR(self->dict);

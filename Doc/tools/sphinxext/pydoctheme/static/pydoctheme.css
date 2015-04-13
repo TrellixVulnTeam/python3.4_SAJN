@@ -94,31 +94,31 @@ div.body div.seealso {
 }
 
 div.body a {
-    color: #0072aa;
+    color: #00608f;
 }
 
 div.body a:visited {
-    color: #6363bb;
+    color: #30306f;
 }
 
 div.body a:hover {
     color: #00B0E4;
 }
 
-tt, code, pre {
+tt, pre {
     font-family: monospace, sans-serif;
     font-size: 96.5%;
 }
 
-div.body tt, div.body code {
+div.body tt {
     border-radius: 3px;
 }
 
-div.body tt.descname, div.body code.descname {
+div.body tt.descname {
     font-size: 120%;
 }
 
-div.body tt.xref, div.body a tt, div.body code.xref, div.body a code {
+div.body tt.xref, div.body a tt {
     font-weight: normal;
 }
 

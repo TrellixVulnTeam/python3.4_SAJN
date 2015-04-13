@@ -8,12 +8,13 @@ Licensed to the PSF under a contributor agreement.
 import ensurepip
 import os
 import os.path
+import shutil
 import struct
 import subprocess
 import sys
 import tempfile
 from test.support import (captured_stdout, captured_stderr, run_unittest,
-                          can_symlink, EnvironmentVarGuard, rmtree)
+                          can_symlink, EnvironmentVarGuard)
 import textwrap
 import unittest
 import venv
@@ -55,7 +56,7 @@ class BaseTest(unittest.TestCase):
         self.exe = os.path.split(executable)[-1]
 
     def tearDown(self):
-        rmtree(self.env_dir)
+        shutil.rmtree(self.env_dir)
 
     def run_with_capture(self, func, *args, **kwargs):
         with captured_stdout() as output:
@@ -82,7 +83,7 @@ class BasicTest(BaseTest):
         """
         Test the create function with default arguments.
         """
-        rmtree(self.env_dir)
+        shutil.rmtree(self.env_dir)
         self.run_with_capture(venv.create, self.env_dir)
         self.isdir(self.bindir)
         self.isdir(self.include)
@@ -120,7 +121,7 @@ class BasicTest(BaseTest):
         self.assertEqual(sys.base_exec_prefix, sys.exec_prefix)
 
         # check a venv's prefixes
-        rmtree(self.env_dir)
+        shutil.rmtree(self.env_dir)
         self.run_with_capture(venv.create, self.env_dir)
         envpy = os.path.join(self.env_dir, self.bindir, self.exe)
         cmd = [envpy, '-c', None]
@@ -187,7 +188,7 @@ class BasicTest(BaseTest):
             if os.path.islink(fn) or os.path.isfile(fn):
                 os.remove(fn)
             elif os.path.isdir(fn):
-                rmtree(fn)
+                shutil.rmtree(fn)
 
     def test_unoverwritable_fails(self):
         #create a file clashing with directories in the env dir
@@ -253,7 +254,7 @@ class BasicTest(BaseTest):
         """
         Test that the sys.executable value is as expected.
         """
-        rmtree(self.env_dir)
+        shutil.rmtree(self.env_dir)
         self.run_with_capture(venv.create, self.env_dir)
         envpy = os.path.join(os.path.realpath(self.env_dir), self.bindir, self.exe)
         cmd = [envpy, '-c', 'import sys; print(sys.executable)']
@@ -267,7 +268,7 @@ class BasicTest(BaseTest):
         """
         Test that the sys.executable value is as expected.
         """
-        rmtree(self.env_dir)
+        shutil.rmtree(self.env_dir)
         builder = venv.EnvBuilder(clear=True, symlinks=True)
         builder.create(self.env_dir)
         envpy = os.path.join(os.path.realpath(self.env_dir), self.bindir, self.exe)
@@ -298,12 +299,12 @@ class EnsurePipTest(BaseTest):
 
 
     def test_no_pip_by_default(self):
-        rmtree(self.env_dir)
+        shutil.rmtree(self.env_dir)
         self.run_with_capture(venv.create, self.env_dir)
         self.assert_pip_not_installed()
 
     def test_explicit_no_pip(self):
-        rmtree(self.env_dir)
+        shutil.rmtree(self.env_dir)
         self.run_with_capture(venv.create, self.env_dir, with_pip=False)
         self.assert_pip_not_installed()
 
@@ -320,7 +321,7 @@ class EnsurePipTest(BaseTest):
     # Requesting pip fails without SSL (http://bugs.python.org/issue19744)
     @unittest.skipIf(ssl is None, ensurepip._MISSING_SSL_MESSAGE)
     def test_with_pip(self):
-        rmtree(self.env_dir)
+        shutil.rmtree(self.env_dir)
         with EnvironmentVarGuard() as envvars:
             # pip's cross-version compatibility may trigger deprecation
             # warnings in current versions of Python. Ensure related

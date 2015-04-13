@@ -41,10 +41,6 @@ class Task(futures.Future):
     # all running event loops.  {EventLoop: Task}
     _current_tasks = {}
 
-    # If False, don't log a message if the task is destroyed whereas its
-    # status is still pending
-    _log_destroy_pending = True
-
     @classmethod
     def current_task(cls, loop=None):
         """Return the currently running task in an event loop or None.
@@ -68,7 +64,7 @@ class Task(futures.Future):
         return {t for t in cls._all_tasks if t._loop is loop}
 
     def __init__(self, coro, *, loop=None):
-        assert coroutines.iscoroutine(coro), repr(coro)
+        assert coroutines.iscoroutine(coro), repr(coro)  # Not a coroutine function!
         super().__init__(loop=loop)
         if self._source_traceback:
             del self._source_traceback[-1]
@@ -77,10 +73,13 @@ class Task(futures.Future):
         self._must_cancel = False
         self._loop.call_soon(self._step)
         self.__class__._all_tasks.add(self)
+        # If False, don't log a message if the task is destroyed whereas its
+        # status is still pending
+        self._log_destroy_pending = True
 
-    # On Python 3.3 or older, objects with a destructor that are part of a
-    # reference cycle are never destroyed. That's not the case any more on
-    # Python 3.4 thanks to the PEP 442.
+    # On Python 3.3 or older, objects with a destructor part of a reference
+    # cycle are never destroyed. It's not more the case on Python 3.4 thanks to
+    # the PEP 442.
     if _PY34:
         def __del__(self):
             if self._state == futures._PENDING and self._log_destroy_pending:
@@ -110,7 +109,7 @@ class Task(futures.Future):
     def get_stack(self, *, limit=None):
         """Return the list of stack frames for this task's coroutine.
 
-        If the coroutine is not done, this returns the stack where it is
+        If the coroutine is active, this returns the stack where it is
         suspended.  If the coroutine has completed successfully or was
         cancelled, this returns an empty list.  If the coroutine was
         terminated by an exception, this returns the list of traceback
@@ -156,8 +155,7 @@ class Task(futures.Future):
         This produces output similar to that of the traceback module,
         for the frames retrieved by get_stack().  The limit argument
         is passed to get_stack().  The file argument is an I/O stream
-        to which the output is written; by default output is written
-        to sys.stderr.
+        to which the output goes; by default it goes to sys.stderr.
         """
         extracted_list = []
         checked = set()
@@ -186,18 +184,18 @@ class Task(futures.Future):
                 print(line, file=file, end='')
 
     def cancel(self):
-        """Request that this task cancel itself.
+        """Request this task to cancel itself.
 
         This arranges for a CancelledError to be thrown into the
         wrapped coroutine on the next cycle through the event loop.
         The coroutine then has a chance to clean up or even deny
         the request using try/except/finally.
 
-        Unlike Future.cancel, this does not guarantee that the
+        Contrary to Future.cancel(), this does not guarantee that the
         task will be cancelled: the exception might be caught and
-        acted upon, delaying cancellation of the task or preventing
-        cancellation completely.  The task may also return a value or
-        raise a different exception.
+        acted upon, delaying cancellation of the task or preventing it
+        completely.  The task may also return a value or raise a
+        different exception.
 
         Immediately after this method is called, Task.cancelled() will
         not return True (unless the task was already cancelled).  A
@@ -347,9 +345,10 @@ def wait_for(fut, timeout, *, loop=None):
     it cancels the task and raises TimeoutError.  To avoid the task
     cancellation, wrap it in shield().
 
-    If the wait is cancelled, the task is also cancelled.
+    Usage:
 
-    This function is a coroutine.
+        result = yield from asyncio.wait_for(fut, 10.0)
+
     """
     if loop is None:
         loop = events.get_event_loop()
@@ -366,12 +365,7 @@ def wait_for(fut, timeout, *, loop=None):
 
     try:
         # wait until the future completes or the timeout
-        try:
-            yield from waiter
-        except futures.CancelledError:
-            fut.remove_done_callback(cb)
-            fut.cancel()
-            raise
+        yield from waiter
 
         if fut.done():
             return fut.result()
@@ -586,13 +580,12 @@ def gather(*coros_or_futures, loop=None, return_exceptions=False):
 
     def _done_callback(i, fut):
         nonlocal nfinished
-        if outer.done():
-            if not fut.cancelled():
+        if outer._state != futures._PENDING:
+            if fut._exception is not None:
                 # Mark exception retrieved.
                 fut.exception()
             return
-
-        if fut.cancelled():
+        if fut._state == futures._CANCELLED:
             res = futures.CancelledError()
             if not return_exceptions:
                 outer.set_exception(res)
@@ -649,11 +642,9 @@ def shield(arg, *, loop=None):
 
     def _done_callback(inner):
         if outer.cancelled():
-            if not inner.cancelled():
-                # Mark inner's result as retrieved.
-                inner.exception()
+            # Mark inner's result as retrieved.
+            inner.cancelled() or inner.exception()
             return
-
         if inner.cancelled():
             outer.cancel()
         else:

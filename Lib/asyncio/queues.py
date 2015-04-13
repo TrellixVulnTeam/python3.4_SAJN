@@ -13,16 +13,12 @@ from .tasks import coroutine
 
 
 class QueueEmpty(Exception):
-    """Exception raised when Queue.get_nowait() is called on a Queue object
-    which is empty.
-    """
+    'Exception raised by Queue.get(block=0)/get_nowait().'
     pass
 
 
 class QueueFull(Exception):
-    """Exception raised when the Queue.put_nowait() method is called on a Queue
-    object which is full.
-    """
+    'Exception raised by Queue.put(block=0)/put_nowait().'
     pass
 
 
@@ -115,10 +111,8 @@ class Queue:
     def put(self, item):
         """Put an item into the queue.
 
-        Put an item into the queue. If the queue is full, wait until a free
-        slot is available before adding item.
-
-        This method is a coroutine.
+        If you yield from put(), wait until a free slot is available
+        before adding item.
         """
         self._consume_done_getters()
         if self._getters:
@@ -130,8 +124,6 @@ class Queue:
             # Use _put and _get instead of passing item straight to getter, in
             # case a subclass has logic that must run (e.g. JoinableQueue).
             self._put(item)
-
-            # getter cannot be cancelled, we just removed done getters
             getter.set_result(self._get())
 
         elif self._maxsize > 0 and self._maxsize <= self.qsize():
@@ -158,8 +150,6 @@ class Queue:
             # Use _put and _get instead of passing item straight to getter, in
             # case a subclass has logic that must run (e.g. JoinableQueue).
             self._put(item)
-
-            # getter cannot be cancelled, we just removed done getters
             getter.set_result(self._get())
 
         elif self._maxsize > 0 and self._maxsize <= self.qsize():
@@ -171,9 +161,7 @@ class Queue:
     def get(self):
         """Remove and return an item from the queue.
 
-        If queue is empty, wait until an item is available.
-
-        This method is a coroutine.
+        If you yield from get(), wait until a item is available.
         """
         self._consume_done_putters()
         if self._putters:
@@ -208,8 +196,6 @@ class Queue:
             item, putter = self._putters.popleft()
             self._put(item)
             # Wake putter on next tick.
-
-            # getter cannot be cancelled, we just removed done putters
             putter.set_result(None)
 
             return self._get()

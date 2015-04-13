@@ -15,6 +15,7 @@ import os
 import re
 import sys
 import getopt
+import subprocess
 from os.path import join, splitext, abspath, exists
 from collections import defaultdict
 
@@ -27,16 +28,14 @@ directives = [
     'parsed-literal', 'pull-quote', 'raw', 'replace',
     'restructuredtext-test-directive', 'role', 'rubric', 'sectnum', 'sidebar',
     'table', 'target-notes', 'tip', 'title', 'topic', 'unicode', 'warning',
-    # Sphinx and Python docs custom ones
+    # Sphinx custom ones
     'acks', 'attribute', 'autoattribute', 'autoclass', 'autodata',
     'autoexception', 'autofunction', 'automethod', 'automodule', 'centered',
     'cfunction', 'class', 'classmethod', 'cmacro', 'cmdoption', 'cmember',
     'code-block', 'confval', 'cssclass', 'ctype', 'currentmodule', 'cvar',
-    'data', 'decorator', 'decoratormethod', 'deprecated-removed',
-    'deprecated(?!-removed)', 'describe', 'directive', 'doctest', 'envvar',
-    'event', 'exception', 'function', 'glossary', 'highlight', 'highlightlang',
-    'impl-detail', 'index', 'literalinclude', 'method', 'miscnews', 'module',
-    'moduleauthor', 'opcode', 'pdbcommand', 'productionlist',
+    'data', 'deprecated', 'describe', 'directive', 'doctest', 'envvar', 'event',
+    'exception', 'function', 'glossary', 'highlight', 'highlightlang', 'index',
+    'literalinclude', 'method', 'module', 'moduleauthor', 'productionlist',
     'program', 'role', 'sectionauthor', 'seealso', 'sourcecode', 'staticmethod',
     'tabularcolumns', 'testcode', 'testoutput', 'testsetup', 'toctree', 'todo',
     'todolist', 'versionadded', 'versionchanged'
@@ -45,13 +44,12 @@ directives = [
 all_directives = '(' + '|'.join(directives) + ')'
 seems_directive_re = re.compile(r'\.\. %s([^a-z:]|:(?!:))' % all_directives)
 default_role_re = re.compile(r'(^| )`\w([^`]*?\w)?`($| )')
-leaked_markup_re = re.compile(r'[a-z]::\s|`|\.\.\s*\w+:')
+leaked_markup_re = re.compile(r'[a-z]::[^=]|:[a-z]+:|`|\.\.\s*\w+:')
 
 
 checkers = {}
 
 checker_props = {'severity': 1, 'falsepositives': False}
-
 
 def checker(*suffixes, **kwds):
     """Decorator to register a function as a checker."""
@@ -173,6 +171,10 @@ Options:  -v       verbose (print all checked file names)
     count = defaultdict(int)
 
     for root, dirs, files in os.walk(path):
+        # ignore subdirs controlled by svn
+        if '.svn' in dirs:
+            dirs.remove('.svn')
+
         # ignore subdirs in ignore list
         if abspath(root) in ignore:
             del dirs[:]

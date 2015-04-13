@@ -220,11 +220,8 @@ decode_ascii_surrogateescape(const char *arg, size_t *size)
     wchar_t *res;
     unsigned char *in;
     wchar_t *out;
-    size_t argsize = strlen(arg) + 1;
 
-    if (argsize > PY_SSIZE_T_MAX/sizeof(wchar_t))
-        return NULL;
-    res = PyMem_RawMalloc(argsize*sizeof(wchar_t));
+    res = PyMem_RawMalloc((strlen(arg)+1)*sizeof(wchar_t));
     if (!res)
         return NULL;
 
@@ -306,15 +303,10 @@ _Py_char2wchar(const char* arg, size_t *size)
     argsize = mbstowcs(NULL, arg, 0);
 #endif
     if (argsize != (size_t)-1) {
-        if (argsize == PY_SSIZE_T_MAX)
-            goto oom;
-        argsize += 1;
-        if (argsize > PY_SSIZE_T_MAX/sizeof(wchar_t))
-            goto oom;
-        res = (wchar_t *)PyMem_RawMalloc(argsize*sizeof(wchar_t));
+        res = (wchar_t *)PyMem_RawMalloc((argsize+1)*sizeof(wchar_t));
         if (!res)
             goto oom;
-        count = mbstowcs(res, arg, argsize);
+        count = mbstowcs(res, arg, argsize+1);
         if (count != (size_t)-1) {
             wchar_t *tmp;
             /* Only use the result if it contains no
@@ -337,8 +329,6 @@ _Py_char2wchar(const char* arg, size_t *size)
     /* Overallocate; as multi-byte characters are in the argument, the
        actual output could use less memory. */
     argsize = strlen(arg) + 1;
-    if (argsize > PY_SSIZE_T_MAX/sizeof(wchar_t))
-        goto oom;
     res = (wchar_t*)PyMem_RawMalloc(argsize*sizeof(wchar_t));
     if (!res)
         goto oom;

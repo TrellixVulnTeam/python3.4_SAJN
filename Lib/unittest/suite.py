@@ -31,6 +31,9 @@ class BaseTestSuite(object):
             return NotImplemented
         return list(self) == list(other)
 
+    def __ne__(self, other):
+        return not self == other
+
     def __iter__(self):
         return iter(self._tests)
 

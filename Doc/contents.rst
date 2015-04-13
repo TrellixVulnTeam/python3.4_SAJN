@@ -22,7 +22,7 @@
    copyright.rst
    license.rst
 
-.. to include legacy packaging docs in build
+.. include legacy packaging docs in build
 
 .. toctree::
    :hidden:

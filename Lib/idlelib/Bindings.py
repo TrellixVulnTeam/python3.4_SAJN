@@ -77,8 +77,7 @@ menudefs = [
    ('!_Auto-open Stack Viewer', '<<toggle-jit-stack-viewer>>'),
    ]),
  ('options', [
-   ('Configure _IDLE', '<<open-config-dialog>>'),
-   ('Configure _Extensions', '<<open-config-extensions-dialog>>'),
+   ('_Configure IDLE...', '<<open-config-dialog>>'),
    None,
    ]),
  ('help', [

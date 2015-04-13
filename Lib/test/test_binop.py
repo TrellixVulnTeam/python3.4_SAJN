@@ -194,6 +194,10 @@ class Rat(object):
             return float(self) == other
         return NotImplemented
 
+    def __ne__(self, other):
+        """Compare two Rats for inequality."""
+        return not self == other
+
 class RatTestCase(unittest.TestCase):
     """Unit tests for Rat class and its support utilities."""
 

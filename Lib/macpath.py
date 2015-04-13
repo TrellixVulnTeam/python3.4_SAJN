@@ -53,7 +53,7 @@ def join(s, *p):
     colon = _get_colon(s)
     path = s
     for t in p:
-        if (not path) or isabs(t):
+        if (not s) or isabs(t):
             path = t
             continue
         if t[:1] == colon:

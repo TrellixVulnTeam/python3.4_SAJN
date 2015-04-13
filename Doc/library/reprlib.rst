@@ -148,11 +148,12 @@ for file objects could be added::
    import sys
 
    class MyRepr(reprlib.Repr):
-
-       def repr_TextIOWrapper(self, obj, level):
-           if obj.name in {'<stdin>', '<stdout>', '<stderr>'}:
+       def repr_file(self, obj, level):
+           if obj.name in ['<stdin>', '<stdout>', '<stderr>']:
                return obj.name
-           return repr(obj)
+           else:
+               return repr(obj)
 
    aRepr = MyRepr()
    print(aRepr.repr(sys.stdin))         # prints '<stdin>'
+

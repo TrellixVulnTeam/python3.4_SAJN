@@ -290,17 +290,15 @@ def quote(s):
     return "'" + s.replace("'", "'\"'\"'") + "'"
 
 
-def _print_tokens(lexer):
-    while 1:
-        tt = lexer.get_token()
-        if not tt:
-            break
-        print("Token: " + repr(tt))
-
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        _print_tokens(shlex())
+        lexer = shlex()
     else:
-        fn = sys.argv[1]
-        with open(fn) as f:
-            _print_tokens(shlex(f, fn))
+        file = sys.argv[1]
+        lexer = shlex(open(file), file)
+    while 1:
+        tt = lexer.get_token()
+        if tt:
+            print("Token: " + repr(tt))
+        else:
+            break

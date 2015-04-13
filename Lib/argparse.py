@@ -490,7 +490,7 @@ class HelpFormatter(object):
         action_width = help_position - self._current_indent - 2
         action_header = self._format_action_invocation(action)
 
-        # no help; start on same line and add a final newline
+        # ho nelp; start on same line and add a final newline
         if not action.help:
             tup = self._current_indent, '', action_header
             action_header = '%*s%s\n' % tup
@@ -1122,14 +1122,7 @@ class _SubParsersAction(Action):
         # parse all the remaining options into the namespace
         # store any unrecognized options on the object, so that the top
         # level parser can decide what to do with them
-
-        # In case this subparser defines new defaults, we parse them
-        # in a new namespace object and then update the original
-        # namespace for the relevant parts.
-        subnamespace, arg_strings = parser.parse_known_args(arg_strings, None)
-        for key, value in vars(subnamespace).items():
-            setattr(namespace, key, value)
-
+        namespace, arg_strings = parser.parse_known_args(arg_strings, namespace)
         if arg_strings:
             vars(namespace).setdefault(_UNRECOGNIZED_ARGS_ATTR, [])
             getattr(namespace, _UNRECOGNIZED_ARGS_ATTR).extend(arg_strings)

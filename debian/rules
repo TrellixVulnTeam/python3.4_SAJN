@@ -879,7 +879,7 @@ endif
 		usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER)*.pc \
 		usr/lib/python$(VER)/distutils/command/wininst-*.exe
 
-	sed 's/@subdir@/$(PVER)m/;s/@header@/pyconfig.h/' \
+	sed 's/@subdir@/$(PVER)$(ABIFLAGS)/;s/@header@/pyconfig.h/' \
 		debian/multiarch.h.in > $(d_ldev)/usr/include/$(PVER)$(ABIFLAGS)/pyconfig.h
 
 	sed -i '/^Cflags:/s,$$, -I$${includedir}/$(DEB_HOST_MULTIARCH)/python$(VER)$(ABIFLAGS),' \
@@ -1140,7 +1140,7 @@ endif
 	cp -p debian/$(PVER)-dbg.README.Debian \
 		$(d_dbg)/usr/share/doc/$(p_base)/README.debug
 	cp -p $(buildd_debug)/python $(d_dbg)/usr/bin/$(PVER)$(DEBUG_ABIFLAGS)
-	ln -sf python$(VER)dm $(d_dbg)/usr/bin/$(PVER)-dbg
+	ln -sf python$(VER)$(DEBUG_ABIFLAGS) $(d_dbg)/usr/bin/$(PVER)-dbg
 
 ifneq ($(with_tk),yes)
 	rm -f $(d_ldbg)/$(scriptdir)/lib-dynload/_tkinter*.so
@@ -1209,7 +1209,7 @@ ifeq ($(with_udeb),yes)
 		usr/bin \
 		usr/include/$(PVER)mu \
 		$(scriptdir)/lib-dynload \
-		$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)
+		$(scriptdir)/config-$(VER)$(ABIFLAGS)-$(DEB_HOST_MULTIARCH)
 	cp -p $(d_min)/usr/bin/python$(VER) $(d_udeb)/usr/bin/
 	ln -sf python$(VER)mu $(d_udeb)/usr/bin/python$(VER)
 	ln -sf python$(VER) $(d_udeb)/usr/bin/python3
@@ -1219,10 +1219,10 @@ ifeq ($(with_udeb),yes)
 		$(d_udeb)/$(scriptdir)/
 	cp -p $(foreach i,$(MIN_ENCODINGS),$(d_min)/$(scriptdir)/$(i)) \
 		$(d_udeb)/$(scriptdir)/
-	cp -p $(d_min)/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/Makefile \
-		$(d_udeb)/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/
-	cp -p $(d_min)/usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)m/pyconfig.h \
-		$(d_udeb)/usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)m/
+	cp -p $(d_min)/$(scriptdir)/config-$(VER)$(ABIFLAGS)-$(DEB_HOST_MULTIARCH)/Makefile \
+		$(d_udeb)/$(scriptdir)/config-$(VER)$(ABIFLAGS)-$(DEB_HOST_MULTIARCH)/
+	cp -p $(d_min)/usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)$(ABIFLAGS)/pyconfig.h \
+		$(d_udeb)/usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)$(ABIFLAGS)/
 	cp -p $(d_min)/$(scriptdir)/site.py $(d_udeb)/$(scriptdir)/
 	cp -p debian/sitecustomize.py $(d_udeb)/etc/$(PVER)/
 	dh_link -p$(p_udeb) /etc/$(PVER)/sitecustomize.py \

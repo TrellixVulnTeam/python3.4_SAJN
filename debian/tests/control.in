@@ -1,8 +1,8 @@
 Tests: testsuite
-Depends: build-essential, locales, @PVER@, @PVER@-dev, lib@PVER@-testsuite, lib@PVER@-tk, lib@PVER@-gdbm
+Depends: build-essential, locales, @PVER@, @PVER@-dev, lib@PVER@-testsuite, lib@PVER@-tk, lib@PVER@-gdbm, @PVER@-venv
 
 Tests: testsuite-dbg
-Depends: build-essential, locales, gdb, @PVER@-dbg, lib@PVER@-testsuite, lib@PVER@-tk-dbg, lib@PVER@-gdbm-dbg
+Depends: build-essential, locales, gdb, @PVER@-dbg, lib@PVER@-testsuite, lib@PVER@-tk-dbg, lib@PVER@-gdbm-dbg, @PVER@-venv
 
 Tests: regr6-curses-newpad
 Depends: @PVER@
@@ -22,7 +22,7 @@ Tests: regr20-check-dynamic-ctypes
 Depends: libc-bin, lib@PVER@-stdlib, lib@PVER@-dbg
 
 Tests: regr23-venv-install-layout
-Depends: @PVER@
+Depends: @PVER@, @PVER@-venv
 
 Tests: check-various-modules
 Depends: @PVER@, lib@PVER@-gdbm, lib@PVER@-tk
@@ -31,4 +31,4 @@ Tests: check-ndbm
 Depends: libc-bin, @PVER@
 
 Tests: check-disabled-venv-site-packages
-Depends: @PVER@
+Depends: @PVER@, @PVER@-venv

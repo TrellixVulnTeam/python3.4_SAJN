@@ -34,6 +34,20 @@ Description: Interactive high-level object-oriented language (version 3.4)
  includes an extensive class library with lots of goodies for
  network programming, system administration, sounds and graphics.
 
+Package: python3.4-venv
+Architecture: any
+Multi-Arch: allowed
+Priority: optional
+Replaces: python3.4 (<< 3.4.3-2)
+Breaks: python3.4 (<< 3.4.3-2)
+Depends: python3.4 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Interactive high-level object-oriented language (pyvenv binary, version 3.4)
+ Python is a high-level, interactive, object-oriented language. Its 3.4 version
+ includes an extensive class library with lots of goodies for
+ network programming, system administration, sounds and graphics.
+ .
+ This package contains the pyvenv-3.4 binary.
+
 Package: libpython3.4-stdlib
 Architecture: any
 Multi-Arch: same
@@ -308,6 +322,7 @@ Depends:
  python3.4-dev (>= ${binary:Version}),
  python3.4-doc (>= ${binary:Version}),
  python3.4-dbg (>= ${binary:Version}),
+ python3.4-venv (>= ${binary:Version}),
  idle-python3.4 (>= ${binary:Version}),
  ${misc:Depends}
 Description: Interactive high-level object-oriented language (version 3.4)

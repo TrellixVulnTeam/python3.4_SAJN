@@ -34,6 +34,20 @@ Description: Interactive high-level object-oriented language (version @VER@)
  includes an extensive class library with lots of goodies for
  network programming, system administration, sounds and graphics.
 
+Package: @PVER@-venv
+Architecture: any
+Multi-Arch: allowed
+Priority: @PRIO@
+Replaces: @PVER@ (<< 3.4.3-2)
+Breaks: @PVER@ (<< 3.4.3-2)
+Depends: @PVER@ (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Interactive high-level object-oriented language (pyvenv binary, version @VER@)
+ Python is a high-level, interactive, object-oriented language. Its @VER@ version
+ includes an extensive class library with lots of goodies for
+ network programming, system administration, sounds and graphics.
+ .
+ This package contains the pyvenv-@VER@ binary.
+
 Package: lib@PVER@-stdlib
 Architecture: any
 Multi-Arch: same
@@ -308,6 +322,7 @@ Depends:
  @PVER@-dev (>= ${binary:Version}),
  @PVER@-doc (>= ${binary:Version}),
  @PVER@-dbg (>= ${binary:Version}),
+ @PVER@-venv (>= ${binary:Version}),
  idle-@PVER@ (>= ${binary:Version}),
  ${misc:Depends}
 Description: Interactive high-level object-oriented language (version @VER@)

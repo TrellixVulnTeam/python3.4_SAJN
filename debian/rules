@@ -65,7 +65,7 @@ distribution := $(shell lsb_release -is)
 distrelease  := $(shell lsb_release -cs)
 
 VER=3.4
-SVER=3.4.2
+SVER=3.4.3
 NVER=3.5
 PVER=python3.4
 PRIORITY=$(shell echo $(VER) | tr -d '.')0
@@ -198,6 +198,7 @@ p_idle		:= idle-$(PVER)
 p_doc		:= $(PVER)-doc
 p_dbg		:= $(PVER)-dbg
 p_udeb		:= $(PVER)-udeb
+p_venv		:= $(PVER)-venv
 
 p_lbase		:= lib$(PVER)-stdlib
 p_lmin		:= lib$(PVER)-minimal
@@ -222,6 +223,7 @@ d_tk		:= debian/$(p_tk)
 d_tk_dbg	:= debian/$(p_tk_dbg)
 d_gdb		:= debian/$(p_gdbm)
 d_gdbm_dbg	:= debian/$(p_gdbm_dbg)
+d_venv		:= debian/$(p_venv)
 
 d_lbase		:= debian/$(p_lbase)
 d_lmin		:= debian/$(p_lmin)
@@ -1024,6 +1026,16 @@ endif
 	install -m 644 -p debian/README.$(p_idle) \
 		$(d_idle)/usr/share/doc/$(p_idle)/README.Debian
 
+	: # pyvenv and ensurepip files into $(p_venv)
+	dh_installdirs -p$(p_venv) \
+		usr/bin \
+		usr/share/man/man1 \
+		usr/lib/python$(VER)
+	dh_movefiles -p$(p_venv) \
+		usr/bin/pyvenv-$(VER) \
+		usr/share/man/man1/pyvenv-$(VER).1 \
+		usr/lib/python$(VER)/ensurepip
+
 	: # library files into $(p_lbase)
 	dh_installdirs -p$(p_lbase) \
 		usr/lib
@@ -1299,7 +1311,7 @@ binary-arch: build-arch install
 	-dh_icons -a || dh_iconcache -a
 #	dh_installmime -a
 	dh_installchangelogs -a
-	for i in $(p_dev) $(p_dbg); do \
+	for i in $(p_dev) $(p_dbg) $(p_venv); do \
 	  rm -rf debian/$$i/usr/share/doc/$$i; \
 	  ln -s $(p_base) debian/$$i/usr/share/doc/$$i; \
 	done

@@ -1,3 +1,10 @@
+python3.4 (3.4.3-2+precise1) precise; urgency=medium
+
+  * Install pyvenv binary in separate python3.4-venv package, for consistency
+    with the mainline Ubuntu/Debian packages.
+
+ -- Felix Krull <f_krull@gmx.de>  Sun, 13 Sep 2015 22:53:27 +0200
+
 python3.4 (3.4.3-1+precise1) precise; urgency=medium
 
   * Imported new upstream release Python 3.4.3.

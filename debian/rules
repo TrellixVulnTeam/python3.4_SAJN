@@ -75,7 +75,7 @@ distribution := $(shell lsb_release -is)
 distrelease  := $(shell lsb_release -cs)
 
 VER=3.4
-SVER=3.4.3
+SVER=3.4.4
 NVER=3.5
 PVER=python$(VER)
 PRIORITY=$(shell echo $(VER) | tr -d '.')0

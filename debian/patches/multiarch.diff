@@ -61,16 +61,7 @@
  		-o $@ $(srcdir)/Python/sysmodule.c
  
  $(IO_OBJS): $(IO_H)
-@@ -1123,7 +1125,7 @@
- 	(cd $(DESTDIR)$(MANDIR)/man1; $(LN) -s python$(VERSION).1 python3.1)
- 
- # Install the library
--PLATDIR=	plat-$(MACHDEP)
-+PLATDIR=	plat-$(MULTIARCH)
- EXTRAPLATDIR= @EXTRAPLATDIR@
- MACHDEPS=	$(PLATDIR) $(EXTRAPLATDIR)
- XMLLIBSUBDIRS=  xml xml/dom xml/etree xml/parsers xml/sax
-@@ -1264,6 +1266,10 @@
+@@ -1263,6 +1265,10 @@
  $(srcdir)/Lib/$(PLATDIR):
  	mkdir $(srcdir)/Lib/$(PLATDIR)
  	cp $(srcdir)/Lib/plat-generic/regen $(srcdir)/Lib/$(PLATDIR)/regen
@@ -81,12 +72,8 @@
  	export PATH; PATH="`pwd`:$$PATH"; \
  	export PYTHONPATH; PYTHONPATH="`pwd`/Lib"; \
  	export DYLD_FRAMEWORK_PATH; DYLD_FRAMEWORK_PATH="`pwd`"; \
-@@ -1311,10 +1317,10 @@
- 
- # Install the library and miscellaneous stuff needed for extending/embedding
- # This goes into $(exec_prefix)
--LIBPL=		$(LIBDEST)/config-$(LDVERSION)
-+LIBPL=		$(LIBDEST)/config-$(LDVERSION)-$(MULTIARCH)
+@@ -1313,7 +1319,7 @@
+ LIBPL=		@LIBPL@
  
  # pkgconfig directory
 -LIBPC=		$(LIBDIR)/pkgconfig
@@ -106,17 +93,6 @@
      "." SOABI ".so",
      ".abi" PYTHON_ABI_STRING ".so",
      ".so",
---- a/Modules/Setup.dist
-+++ b/Modules/Setup.dist
-@@ -91,7 +91,7 @@
- TESTPATH=
- 
- # Path components for machine- or system-dependent modules and shared libraries
--MACHDEPPATH=:plat-$(MACHDEP)
-+MACHDEPPATH=:plat-$(MULTIARCH)
- EXTRAMACHDEPPATH=
- 
- COREPYTHONPATH=$(DESTPATH)$(SITEPATH)$(TESTPATH)$(MACHDEPPATH)$(EXTRAMACHDEPPATH)
 --- a/Python/sysmodule.c
 +++ b/Python/sysmodule.c
 @@ -1608,6 +1608,15 @@
@@ -137,12 +113,35 @@
      ns = _PyNamespace_New(impl_info);
 --- a/configure.ac
 +++ b/configure.ac
-@@ -4118,7 +4118,7 @@
+@@ -556,8 +556,11 @@
+ fi
+ AC_MSG_RESULT($MACHDEP)
+ 
++MULTIARCH=$($CC --print-multiarch 2>/dev/null)
++AC_SUBST(MULTIARCH)
++
+ AC_SUBST(PLATDIR)
+-PLATDIR=plat-$MACHDEP
++PLATDIR=plat-$MULTIARCH
+ 
+ # Record the configure-time value of MACOSX_DEPLOYMENT_TARGET,
+ # it may influence the way we can build extensions, so distutils
+@@ -791,9 +794,6 @@
+     esac;;
+ esac
+ 
+-MULTIARCH=$($CC --print-multiarch 2>/dev/null)
+-AC_SUBST(MULTIARCH)
+-
+ 
+ AC_SUBST(LIBRARY)
+ AC_MSG_CHECKING(LIBRARY)
+@@ -4125,7 +4125,7 @@
  
  dnl define LIBPL after ABIFLAGS and LDVERSION is defined.
  AC_SUBST(PY_ENABLE_SHARED)
--LIBPL="${prefix}/lib/python${VERSION}/config-${LDVERSION}"
-+LIBPL="${prefix}/lib/python${VERSION}/config-${LDVERSION}-${MULTIARCH}"
+-LIBPL='$(prefix)'"/lib/python${VERSION}/config-${LDVERSION}"
++LIBPL='$(prefix)'"/lib/python${VERSION}/config-${LDVERSION}-${MULTIARCH}"
  AC_SUBST(LIBPL)
  
  # Check whether right shifting a negative integer extends the sign bit

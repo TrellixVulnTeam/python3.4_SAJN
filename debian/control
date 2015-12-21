@@ -3,8 +3,10 @@ Section: python
 Priority: optional
 Maintainer: Felix Krull <f_krull@gmx.de>
 XSBC-Original-Maintainer: Matthias Klose <doko@debian.org>
-Build-Depends: debhelper (>= 5.0.51~), dpkg-dev (>= 1.16.1~), quilt, autoconf, lsb-release, sharutils,
-  libreadline6-dev, libncursesw5-dev (>= 5.3),
+Build-Depends: debhelper (>= 5.0.51~), dpkg-dev (>= 1.16.1~), 
+  quilt, autoconf,
+  lsb-release, sharutils,
+  libreadline6-dev, libncursesw5-dev (>= 5.3), 
   zlib1g-dev, libbz2-dev, liblzma-dev,
   libgdbm-dev, libdb-dev,
   tk-dev, blt-dev (>= 2.4z), libssl-dev,
@@ -13,7 +15,7 @@ Build-Depends: debhelper (>= 5.0.51~), dpkg-dev (>= 1.16.1~), quilt, autoconf, l
   locales [!armel !avr32 !hppa !ia64 !mipsel],
   libsqlite3-dev, libffi-dev (>= 3.0.5),
   libgpm2 [!hurd-i386 !kfreebsd-i386 !kfreebsd-amd64],
-  mime-support, netbase, bzip2, python3,
+  mime-support, netbase, bzip2, python3:any,
   net-tools, xvfb, xauth
 Build-Depends-Indep: python-sphinx
 Standards-Version: 3.9.5
@@ -28,7 +30,7 @@ Architecture: any
 Multi-Arch: allowed
 Priority: optional
 Depends: python3.4-minimal (= ${binary:Version}), libpython3.4-stdlib (= ${binary:Version}), mime-support, ${shlibs:Depends}, ${misc:Depends}
-Suggests: python3.4-doc, binutils
+Suggests: python3.4-venv, python3.4-doc, binutils
 Description: Interactive high-level object-oriented language (version 3.4)
  Python is a high-level, interactive, object-oriented language. Its 3.4 version
  includes an extensive class library with lots of goodies for
@@ -52,7 +54,7 @@ Package: libpython3.4-stdlib
 Architecture: any
 Multi-Arch: same
 Priority: optional
-Pre-Depends: multiarch-support
+Pre-Depends: ${misc:Pre-Depends}
 Depends: libpython3.4-minimal (= ${binary:Version}), mime-support, ${shlibs:Depends}, ${misc:Depends}
 Description: Interactive high-level object-oriented language (standard library, version 3.4)
  Python is a high-level, interactive, object-oriented language. Its 3.4 version
@@ -81,7 +83,7 @@ Package: libpython3.4-minimal
 Architecture: any
 Multi-Arch: same
 Priority: optional
-Pre-Depends: multiarch-support
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: libpython3.4-stdlib
 Conflicts: binfmt-support (<< 1.1.2)
@@ -96,7 +98,7 @@ Architecture: any
 Multi-Arch: same
 Section: libs
 Priority: optional
-Pre-Depends: multiarch-support
+Pre-Depends: ${misc:Pre-Depends}
 Depends: libpython3.4-stdlib (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Shared Python runtime library (version 3.4)
  Python is a high-level, interactive, object-oriented language. Its 3.4 version
@@ -129,7 +131,7 @@ Package: libpython3.4-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Pre-Depends: multiarch-support
+Pre-Depends: ${misc:Pre-Depends}
 Depends: libpython3.4-stdlib (= ${binary:Version}), libpython3.4 (= ${binary:Version}), libexpat1-dev, ${shlibs:Depends}, ${misc:Depends}
 Recommends: libc6-dev | libc-dev
 Description: Header files and a static library for Python (v3.4)
@@ -140,7 +142,7 @@ Description: Header files and a static library for Python (v3.4)
  Maintainers of Python packages should read README.maintainers.
  .
  This package contains development files. It is normally not
- used on it's own, but as a dependency of python3.4-dev.
+ used on its own, but as a dependency of python3.4-dev.
 
 Package: libpython3.4-testsuite
 Section: libdevel
@@ -151,7 +153,7 @@ Description: Testsuite for the Python standard library (v3.4)
  The complete testsuite for the Python standard library.  Note that
  a subset is found in the libpython3.4-stdlib package, which should
  be enough for other packages to use (please do not build-depend
- on this package, but file a bug report to include additional 
+ on this package, but file a bug report to include additional
  testsuite files in the libpython3.4-stdlib package).
 
 Package: idle-python3.4
@@ -206,7 +208,7 @@ Section: debug
 Architecture: any
 Multi-Arch: same
 Priority: extra
-Pre-Depends: multiarch-support
+Pre-Depends: ${misc:Pre-Depends}
 Depends: libpython3.4-stdlib (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Debug Build of the Python Interpreter (version 3.4)
  The package holds two things:
@@ -223,6 +225,7 @@ Multi-Arch: same
 Depends: libpython3.4-stdlib (>= ${binary:Version}), ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
 Provides: ${python:Provides}
 Suggests: tix, libpython3.4-tk-dbg
+Pre-Depends: ${misc:Pre-Depends}
 Description: Tkinter - Writing Tk applications with Python (version 3.4)
  A module for writing portable GUI applications with Python (version 3.4)
  using Tk. Also known as Tkinter.
@@ -233,6 +236,7 @@ Multi-Arch: same
 Depends: libpython3.4-stdlib (>= ${binary:Version}), ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
 Provides: ${python:Provides}
 Suggests: libpython3.4-gdbm-dbg
+Pre-Depends: ${misc:Pre-Depends}
 Description: GNU dbm database support for Python (version 3.4)
  GNU dbm database module for Python (version 3.4). Install this if you want to
  create or read GNU dbm database files with Python.
@@ -243,6 +247,7 @@ Multi-Arch: same
 Priority: extra
 Section: debug
 Depends: libpython3.4-dbg (>= ${binary:Version}), ${python:Depends}, libpython3.4-tk (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Pre-Depends: ${misc:Pre-Depends}
 Description: Tkinter - Writing Tk applications with Python (version 3.4 debug extension)
  A module for writing portable GUI applications with Python (version 3.4)
  using Tk. Also known as Tkinter.
@@ -255,6 +260,7 @@ Multi-Arch: same
 Priority: extra
 Section: debug
 Depends: libpython3.4-dbg (>= ${binary:Version}), ${python:Depends}, libpython3.4-gdbm (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Pre-Depends: ${misc:Pre-Depends}
 Description: GNU dbm database support for Python (version 3.4 debug extension)
  GNU dbm database module for Python (version 3.4). Install this if you want to
  create or read GNU dbm database files with Python.

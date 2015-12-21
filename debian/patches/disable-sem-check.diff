@@ -2,7 +2,7 @@
 
 --- a/configure.ac
 +++ b/configure.ac
-@@ -3950,8 +3950,13 @@
+@@ -3957,8 +3957,13 @@
  AC_MSG_RESULT($ac_cv_posix_semaphores_enabled)
  if test $ac_cv_posix_semaphores_enabled = no
  then
@@ -18,7 +18,7 @@
  fi
  
  # Multiprocessing check for broken sem_getvalue
-@@ -3986,8 +3991,13 @@
+@@ -3993,8 +3998,13 @@
  AC_MSG_RESULT($ac_cv_broken_sem_getvalue)
  if test $ac_cv_broken_sem_getvalue = yes
  then

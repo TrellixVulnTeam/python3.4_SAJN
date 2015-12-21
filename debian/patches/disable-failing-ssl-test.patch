@@ -1,6 +1,6 @@
 --- a/Lib/test/test_ssl.py
 +++ b/Lib/test/test_ssl.py
-@@ -2718,6 +2718,7 @@
+@@ -2719,6 +2719,7 @@
                                         chatty=True, connectionchatty=True)
              self.assertIs(stats['compression'], None)
  

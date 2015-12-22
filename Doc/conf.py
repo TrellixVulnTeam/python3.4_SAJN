@@ -34,7 +34,7 @@ today_fmt = '%B %d, %Y'
 highlight_language = 'python3'
 
 # Require Sphinx 1.2 for build.
-needs_sphinx = '1.2'
+#needs_sphinx = '1.2'
 
 
 # Options for HTML output

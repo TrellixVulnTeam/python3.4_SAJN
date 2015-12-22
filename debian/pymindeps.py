@@ -120,7 +120,7 @@ excluded_imports = {
                'riscos', 'riscospath', 'riscosenviron')),
     'optparse': set(('gettext',)),
     'pickle': set(('argparse', 'doctest', 'pprint')),
-    'platform': set(('plistlib', 'tempfile')),
+    'platform': set(('ctypes', 'plistlib', 'tempfile')),
     'reprlib': set(('_dummy_thread',)),
     #'socket': set(('_ssl',)),
     '_sitebuiltins': set(('pydoc',)),

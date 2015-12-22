@@ -27,7 +27,7 @@ TESTEXCLUSIONS="$TESTEXCLUSIONS test_cmd_line_script"
 # test_compileall: FIXME, https://launchpad.net/bugs/1264554
 #TESTEXCLUSIONS="$TESTEXCLUSIONS test_compileall"
 
-# test_curses: Don't run for now, issue with new curses?
+# test_curses: Don't run for now; at the very least, messes up stdout
 TESTEXCLUSIONS="$TESTEXCLUSIONS test_curses"
 
 # test_dbm: Fails from time to time ...
@@ -55,17 +55,21 @@ TESTEXCLUSIONS="$TESTEXCLUSIONS test_platform "
 # test_site: FIXME, https://launchpad.net/bugs/1264554
 TESTEXCLUSIONS="$TESTEXCLUSIONS test_site "
 
+# test_subprocess: the test added for http://bugs.python.org/issue25764 keeps
+# failing
+TESTEXCLUSIONS="$TESTEXCLUSIONS test_subprocess"
+
 # test_tools: not relevant for installed version
 #TESTEXCLUSIONS="$TESTEXCLUSIONS test_tools"
+
+# test_venv: pip doesn't want to work in a buildd environment
+TESTEXCLUSIONS="$TESTEXCLUSIONS test_venv "
 
 # test_zipfile: Issue 17753, requires write access to test and email.test
 #TESTEXCLUSIONS="$TESTEXCLUSIONS test_zipfile"
 
 # test_zipimport_support: FIXME, https://launchpad.net/bugs/1264554
 TESTEXCLUSIONS="$TESTEXCLUSIONS test_zipimport_support"
-
-# test_subprocess: Issue 17757, two failing tests
-#TESTEXCLUSIONS="$TESTEXCLUSIONS test_subprocess"
 
 # test_uuid: fails, but not on the buildd. need to investigate
 #TESTEXCLUSIONS="$TESTEXCLUSIONS test_uuid"

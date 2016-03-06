@@ -1,3 +1,9 @@
+python3.4 (3.4.4-1+xenial1) xenial; urgency=medium
+
+  * Imported from Precise package.
+
+ -- Felix Krull <f_krull@gmx.de>  Sun, 06 Mar 2016 19:38:28 +0100
+
 python3.4 (3.4.4-1+precise1) precise; urgency=medium
 
   * Import new upstream release Python 3.4.4.

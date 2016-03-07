@@ -46,3 +46,4 @@ turtledemo-add-shebang.diff
 deadsnakes-ignore-sphinx-version.diff
 deadsnakes-pyspecific-3.4.2.diff
 disable-failing-ssl-test.patch
+fix-sslv3-test.diff

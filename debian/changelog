@@ -1,8 +1,9 @@
-python3.4 (3.4.4-1+xenial1) xenial; urgency=medium
+python3.4 (3.4.4-2+xenial1) xenial; urgency=medium
 
   * Imported from Precise package.
+  * Bump revision to -2 to accomodate findutils Breaks.
 
- -- Felix Krull <f_krull@gmx.de>  Sun, 06 Mar 2016 19:38:28 +0100
+ -- Felix Krull <f_krull@gmx.de>  Mon, 07 Mar 2016 01:19:41 +0100
 
 python3.4 (3.4.4-1+precise1) precise; urgency=medium
 

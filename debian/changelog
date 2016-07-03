@@ -1,6 +1,5 @@
 python3.4 (3.4.5-1~precise1) precise; urgency=medium
 
-  * Remove DH_COMPAT.
   * debian/watch.in, debian/watch: switch to .tar.xz.
   * debian/watch: verify signature on upstream tarballs.
   * debian/control: update VCS info.

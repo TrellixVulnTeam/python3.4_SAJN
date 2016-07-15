@@ -2,6 +2,7 @@ python3.4 (3.4.5-1~xenial1) xenial; urgency=medium
 
   * Imported from Precise package.
   * debian/rules: remove unsupported DH_COMPAT=2.
+  * Update preinst, postinst, prerm, postrm files.
 
  -- Felix Krull <f_krull@gmx.de>  Tue, 12 Jul 2016 22:06:45 +0200
 

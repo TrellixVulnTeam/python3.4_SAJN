@@ -1,8 +1,17 @@
-# DP: suggest installation of python-tk package on failing _tkinter import
+From: Felix Krull <f_krull@gmx.de>
+Date: Mon, 28 Aug 2017 16:47:00 -0700
+Subject: tkinter-import
 
+# DP: suggest installation of python-tk package on failing _tkinter import
+---
+ Lib/tkinter/__init__.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Lib/tkinter/__init__.py b/Lib/tkinter/__init__.py
+index 75c40e5..548d246 100644
 --- a/Lib/tkinter/__init__.py
 +++ b/Lib/tkinter/__init__.py
-@@ -35,7 +35,10 @@
+@@ -35,7 +35,10 @@ if sys.platform == "win32":
      # Attempt to configure Tcl/Tk without requiring PATH
      from tkinter import _fix
  

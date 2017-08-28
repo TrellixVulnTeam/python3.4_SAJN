@@ -1,6 +1,16 @@
+From: Felix Krull <f_krull@gmx.de>
+Date: Mon, 28 Aug 2017 16:47:00 -0700
+Subject: ctypes-arm
+
+---
+ Lib/ctypes/util.py | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/Lib/ctypes/util.py b/Lib/ctypes/util.py
+index 595113b..bc896d1 100644
 --- a/Lib/ctypes/util.py
 +++ b/Lib/ctypes/util.py
-@@ -201,16 +201,27 @@
+@@ -201,16 +201,27 @@ elif os.name == "posix":
  
          def _findSoname_ldconfig(name):
              import struct

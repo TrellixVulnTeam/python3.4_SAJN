@@ -1,6 +1,16 @@
+From: Felix Krull <f_krull@gmx.de>
+Date: Mon, 28 Aug 2017 16:47:00 -0700
+Subject: hurd-path_max
+
+---
+ Python/pythonrun.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Python/pythonrun.c b/Python/pythonrun.c
+index 0967a47..16b1b03 100644
 --- a/Python/pythonrun.c
 +++ b/Python/pythonrun.c
-@@ -71,6 +71,10 @@
+@@ -71,6 +71,10 @@ void _print_total_refs(void) {
  }
  #endif
  

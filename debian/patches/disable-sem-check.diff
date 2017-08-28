@@ -1,8 +1,17 @@
-# DP: Assume working semaphores, don't rely on running kernel for the check.
+From: Felix Krull <f_krull@gmx.de>
+Date: Mon, 28 Aug 2017 16:47:00 -0700
+Subject: disable-sem-check
 
+# DP: Assume working semaphores, don't rely on running kernel for the check.
+---
+ configure.ac | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index b4378da..7ed3bf3 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -3957,8 +3957,13 @@
+@@ -3957,8 +3957,13 @@ int main(void) {
  AC_MSG_RESULT($ac_cv_posix_semaphores_enabled)
  if test $ac_cv_posix_semaphores_enabled = no
  then
@@ -18,7 +27,7 @@
  fi
  
  # Multiprocessing check for broken sem_getvalue
-@@ -3993,8 +3998,13 @@
+@@ -3993,8 +3998,13 @@ int main(void){
  AC_MSG_RESULT($ac_cv_broken_sem_getvalue)
  if test $ac_cv_broken_sem_getvalue = yes
  then

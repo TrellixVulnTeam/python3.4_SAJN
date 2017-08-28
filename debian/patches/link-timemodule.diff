@@ -1,6 +1,16 @@
+From: Felix Krull <f_krull@gmx.de>
+Date: Mon, 28 Aug 2017 16:47:00 -0700
+Subject: link-timemodule
+
+---
+ Modules/Setup.dist | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Modules/Setup.dist b/Modules/Setup.dist
+index 7a88f0b..84e5bd6 100644
 --- a/Modules/Setup.dist
 +++ b/Modules/Setup.dist
-@@ -171,7 +171,7 @@
+@@ -171,7 +171,7 @@ _symtable symtablemodule.c
  #cmath cmathmodule.c _math.c # -lm # complex math library functions
  #math mathmodule.c _math.c # -lm # math library functions, e.g. sin()
  #_struct _struct.c	# binary structure packing/unpacking

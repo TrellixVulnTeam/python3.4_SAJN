@@ -1,3 +1,13 @@
+From: Felix Krull <f_krull@gmx.de>
+Date: Mon, 28 Aug 2017 16:47:01 -0700
+Subject: deadsnakes-pyspecific-3.4.2
+
+---
+ Doc/tools/extensions/pyspecific.py | 106 +++++++++++++++++++++----------------
+ 1 file changed, 61 insertions(+), 45 deletions(-)
+
+diff --git a/Doc/tools/extensions/pyspecific.py b/Doc/tools/extensions/pyspecific.py
+index 64a5665..ff618ea 100644
 --- a/Doc/tools/extensions/pyspecific.py
 +++ b/Doc/tools/extensions/pyspecific.py
 @@ -9,32 +9,17 @@
@@ -37,7 +47,7 @@
  
  # monkey-patch reST parser to disable alphabetic and roman enumerated lists
  from docutils.parsers.rst.states import Body
-@@ -43,12 +28,23 @@
+@@ -43,12 +28,23 @@ Body.enum.converters['loweralpha'] = \
      Body.enum.converters['lowerroman'] = \
      Body.enum.converters['upperroman'] = lambda x: None
  
@@ -64,7 +74,7 @@
  def new_visit_literal_block(self, node):
      meta = self.builder.env.metadata[self.builder.current_docname]
      old_trim_doctest_flags = self.highlighter.trim_doctest_flags
-@@ -59,7 +55,9 @@
+@@ -59,7 +55,9 @@ def new_visit_literal_block(self, node):
      finally:
          self.highlighter.trim_doctest_flags = old_trim_doctest_flags
  
@@ -74,7 +84,7 @@
  def new_depart_literal_block(self, node):
      meta = self.builder.env.metadata[self.curfilestack[-1]]
      old_trim_doctest_flags = self.highlighter.trim_doctest_flags
-@@ -70,11 +68,8 @@
+@@ -70,11 +68,8 @@ def new_depart_literal_block(self, node):
      finally:
          self.highlighter.trim_doctest_flags = old_trim_doctest_flags
  
@@ -86,7 +96,7 @@
  # Support for marking up and linking to bugs.python.org issues
  
  def issue_role(typ, rawtext, text, lineno, inliner, options={}, content=[]):
-@@ -122,6 +117,9 @@
+@@ -122,6 +117,9 @@ class ImplementationDetail(Directive):
  
  # Support for documenting decorators
  
@@ -96,7 +106,7 @@
  class PyDecoratorMixin(object):
      def handle_signature(self, sig, signode):
          ret = super(PyDecoratorMixin, self).handle_signature(sig, signode)
-@@ -131,14 +129,12 @@
+@@ -131,14 +129,12 @@ class PyDecoratorMixin(object):
      def needs_arglist(self):
          return False
  
@@ -111,7 +121,7 @@
  class PyDecoratorMethod(PyDecoratorMixin, PyClassmember):
      def run(self):
          self.name = 'py:method'
-@@ -191,31 +187,38 @@
+@@ -191,31 +187,38 @@ class DeprecatedRemoved(Directive):
              messages = []
          if self.content:
              self.state.nested_parse(self.content, self.content_offset, node)
@@ -158,7 +168,7 @@
  class MiscNews(Directive):
      has_content = False
      required_arguments = 1
-@@ -240,7 +243,7 @@
+@@ -240,7 +243,7 @@ class MiscNews(Directive):
              text = 'The NEWS file is not available.'
              node = nodes.strong(text, text)
              return [node]
@@ -167,7 +177,7 @@
                                 content)
          content = whatsnew_re.sub(r'\1', content)
          # remove first 3 lines as they are the main heading
-@@ -269,6 +272,15 @@
+@@ -269,6 +272,15 @@ pydoc_topic_labels = [
      'typesseq', 'typesseq-mutable', 'unary', 'while', 'with', 'yield'
  ]
  
@@ -183,7 +193,7 @@
  
  class PydocTopicsBuilder(Builder):
      name = 'pydoc-topics'
-@@ -296,22 +308,28 @@
+@@ -296,22 +308,28 @@ class PydocTopicsBuilder(Builder):
              document.append(doctree.ids[labelid])
              destination = StringOutput(encoding='utf-8')
              writer.write(document, destination)
@@ -218,7 +228,7 @@
  
  def parse_opcode_signature(env, sig, signode):
      """Transform an opcode signature into RST nodes."""
-@@ -332,13 +350,12 @@
+@@ -332,13 +350,12 @@ def parse_opcode_signature(env, sig, signode):
  pdbcmd_sig_re = re.compile(r'([a-z()!]+)\s*(.*)')
  
  # later...
@@ -233,7 +243,7 @@
  def parse_pdb_command(env, sig, signode):
      """Transform a pdb command signature into RST nodes."""
      m = pdbcmd_sig_re.match(sig)
-@@ -369,4 +386,3 @@
+@@ -369,4 +386,3 @@ def setup(app):
      app.add_directive_to_domain('py', 'coroutinefunction', PyCoroutineFunction)
      app.add_directive_to_domain('py', 'coroutinemethod', PyCoroutineMethod)
      app.add_directive('miscnews', MiscNews)

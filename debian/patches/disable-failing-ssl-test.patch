@@ -1,6 +1,16 @@
+From: Felix Krull <f_krull@gmx.de>
+Date: Mon, 28 Aug 2017 16:47:01 -0700
+Subject: disable-failing-ssl-test
+
+---
+ Lib/test/test_ssl.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Lib/test/test_ssl.py b/Lib/test/test_ssl.py
+index 19ef354..4cb682c 100644
 --- a/Lib/test/test_ssl.py
 +++ b/Lib/test/test_ssl.py
-@@ -2725,6 +2725,7 @@
+@@ -2725,6 +2725,7 @@ else:
                                         chatty=True, connectionchatty=True)
              self.assertIs(stats['compression'], None)
  

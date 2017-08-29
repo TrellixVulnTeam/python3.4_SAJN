@@ -1,3 +1,9 @@
+python3.4 (3.4.7-1+xenial1) xenial; urgency=medium
+
+  * Python 3.4.7 release
+
+ -- Anthony Sottile <asottile@umich.edu>  Mon, 28 Aug 2017 19:44:09 -0700
+
 python3.4 (3.4.6-1+xenial1) xenial; urgency=medium
 
   * Python 3.4.6 release

@@ -8,10 +8,10 @@ Subject: deadsnakes-assert-use-system-ffi
  1 file changed, 4 insertions(+)
 
 diff --git a/setup.py b/setup.py
-index 34b74a1..270af15 100644
+index 7a105ea..0eba47a 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -1964,6 +1964,10 @@ class PyBuildExt(build_ext):
+@@ -1967,6 +1967,10 @@ class PyBuildExt(build_ext):
              ext.libraries.append(ffi_lib)
              self.use_system_libffi = True
  
